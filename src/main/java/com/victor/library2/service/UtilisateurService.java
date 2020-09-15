@@ -1,6 +1,6 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.Utilisateur;
+import com.victor.library2.model.UtilisateurDTO;
 import com.victor.library2.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,14 +21,14 @@ public class UtilisateurService {
      *
      * * @return la liste des utilisateurs
      */
-    public List<Utilisateur> getAllUsers()
+    public List<UtilisateurDTO> getAllUsers()
     {
-        List<Utilisateur> utilisateurList = utilisateurRepository.findAll();
+        List<UtilisateurDTO> utilisateurList = utilisateurRepository.findAll();
 
         if(utilisateurList.size() > 0) {
             return utilisateurList;
         } else {
-            return new ArrayList<Utilisateur>();
+            return new ArrayList<UtilisateurDTO>();
         }
     }
 
@@ -38,7 +38,7 @@ public class UtilisateurService {
      * @param id
      * * @return l'utilisateur via id
      */
-    public Utilisateur getUserById(Long id)
+    public UtilisateurDTO getUserById(Long id)
     {
         return this.utilisateurRepository.findById(id).get();
     }
@@ -49,7 +49,7 @@ public class UtilisateurService {
      * @param utilisateur
      * * @return la voie sauvegardée
      */
-    public Utilisateur saveUser(Utilisateur utilisateur)
+    public UtilisateurDTO saveUser(UtilisateurDTO utilisateur)
     {
         return this.utilisateurRepository.save(utilisateur);
     }
@@ -69,7 +69,7 @@ public class UtilisateurService {
      *
      * @return l'utilisateur
      */
-    public Utilisateur getUtilisateurConnected (){
+    public UtilisateurDTO getUtilisateurConnected (){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailUtilisateur = authentication.getName();
         return this.utilisateurRepository.findByMail(emailUtilisateur).get();

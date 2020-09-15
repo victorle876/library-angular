@@ -1,8 +1,17 @@
 package com.victor.library2.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Pret")
 public class Pret {
 
@@ -18,11 +27,11 @@ public class Pret {
     @JoinColumn(name="utilisateur_id", referencedColumnName = "id")
     private Utilisateur utilisateur;*/
 
-    private Boolean isborrowed;
+    private Boolean emprunte;
 
-    private Boolean isextended;
+    private Boolean prolonge;
 
-    private Boolean isreturned;
+    private Boolean retourne;
 
     private Integer nombreProlonge;
 
@@ -53,46 +62,4 @@ public class Pret {
         this.utilisateur = utilisateur;
     }*/
 
-    public Boolean getIsborrowed() {
-        return isborrowed;
-    }
-
-    public void setIsborrowed(Boolean isborrowed) {
-        this.isborrowed = isborrowed;
-    }
-
-    public Boolean getIsextended() {
-        return isextended;
-    }
-
-    public void setIsextended(Boolean isextended) {
-        this.isextended = isextended;
-    }
-
-    public Boolean getIsreturned() {
-        return isreturned;
-    }
-
-    public void setIsreturned(Boolean isreturned) {
-        this.isreturned = isreturned;
-    }
-
-    public Integer getNombreProlonge() {
-        return nombreProlonge;
-    }
-
-    public void setNombreProlonge(Integer nombreProlonge) {
-        this.nombreProlonge = nombreProlonge;
-    }
-
-    @Override
-    public String toString() {
-        return "Pret{" +
-                "id=" + id +
-                ", isborrowed=" + isborrowed +
-                ", isextended=" + isextended +
-                ", isreturned=" + isreturned +
-                ", nombreProlonge=" + nombreProlonge +
-                '}';
-    }
 }

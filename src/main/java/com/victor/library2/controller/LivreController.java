@@ -1,7 +1,7 @@
 package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
-import com.victor.library2.model.Livre;
+import com.victor.library2.model.LivreDTO;
 import com.victor.library2.service.LivreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,14 @@ public class LivreController {
     private LivreService livreService;
 
     @GetMapping("/listLivre")
-    public List<Livre> getAllLivres() {
+    public List<LivreDTO> getAllLivres() {
         return livreService.getAllLivres();
     }
 
     @GetMapping("/detailLivre/{id}")
-    public ResponseEntity<Livre> getlivreById(@PathVariable(value = "id") Long id)
+    public ResponseEntity<LivreDTO> getlivreById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
-        Livre livreId = livreService.getLivreById(id);
+        LivreDTO livreId = livreService.getLivreById(id);
         if (livreId == null){
             new ResourceNotFoundException("Employee not found for this id :: " + livreId);
         }
@@ -35,31 +35,31 @@ public class LivreController {
     }
 
     @PostMapping("/addLivre")
-    public Livre createLivre(@RequestBody Livre livre) {
+    public LivreDTO createLivre(@RequestBody LivreDTO livre) {
 
         return this.livreService.saveLivre(livre);
     }
 
     @PutMapping("/updateLivre/{id}")
-    public ResponseEntity<Livre> updatelivre(@PathVariable(value = "id") Long livreId,
-                                                @RequestBody Livre livreDetails) throws ResourceNotFoundException {
-        Livre livre = livreService.getLivreById(livreId);
+    public ResponseEntity<LivreDTO> updatelivre(@PathVariable(value = "id") Long livreId,
+                                                @RequestBody LivreDTO livreDetails) throws ResourceNotFoundException {
+        LivreDTO livre = livreService.getLivreById(livreId);
         if (livreId == null){
                  new ResourceNotFoundException("Employee not found for this id :: " + livreId);
         }
-        livre.setId(livreDetails.getId());
+/*        livre.setId(livreDetails.getId());
         livre.setAuteur(livreDetails.getAuteur());
         livre.setCollection(livreDetails.getCollection());
         livre.setCategorie(livreDetails.getCategorie());
-        livre.setDescription(livreDetails.getDescription());
-        final Livre updatedLivre = livreService.saveLivre(livre);
+        livre.setDescription(livreDetails.getDescription());*/
+        final LivreDTO updatedLivre = livreService.saveLivre(livre);
         return ResponseEntity.ok(updatedLivre);
     }
 
     @DeleteMapping("/deleteLivre/{id}")
     public Map<String, Boolean> deleteLivre(@PathVariable(value = "id") Long livreId)
             throws ResourceNotFoundException {
-        Livre livre = livreService.getLivreById(livreId);
+        LivreDTO livre = livreService.getLivreById(livreId);
         if (livreId == null){
                  new ResourceNotFoundException("Livre not found for this id :: " + livreId);
         }

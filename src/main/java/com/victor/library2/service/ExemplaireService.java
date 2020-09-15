@@ -1,8 +1,7 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.Stock;
-import com.victor.library2.repository.StockRepository;
-import com.victor.library2.repository.StockRepository;
+import com.victor.library2.model.ExemplaireDTO;
+import com.victor.library2.repository.ExemplaireRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,27 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class StockService {
+public class ExemplaireService {
 
     @Autowired
-    StockRepository stockRepository;
+    ExemplaireRepository exemplaireRepository;
 
 
-    private static final Logger logger = LogManager.getLogger(StockService.class);
+    private static final Logger logger = LogManager.getLogger(ExemplaireService.class);
 
     /**
      * Méthode permet de lister toutes les Topos via ce service
      *
      * * @return la liste des topos
      */
-    public List<Stock> getAllStocks()
+    public List<ExemplaireDTO> getAllExemplaires()
     {
-        List<Stock> StockList = stockRepository.findAll();
-        logger.debug(StockList.size());
-        if(StockList.size() > 0) {
-            return StockList;
+        List<ExemplaireDTO> exemplaireList = exemplaireRepository.findAll();
+        logger.debug(exemplaireList.size());
+        if(exemplaireList.size() > 0) {
+            return exemplaireList;
         } else {
-            return new ArrayList<Stock>();
+            return new ArrayList<ExemplaireDTO>();
         }
     }
 
@@ -42,21 +41,21 @@ public class StockService {
      * @param id
      * * @return le stock via id
      */
-    public Stock getStockById(Long id)
+    public ExemplaireDTO getExemplaireById(Long id)
     {
-        return this.stockRepository.findById(id).get();
+        return this.exemplaireRepository.findById(id).get();
 
     }
 
     /**
      * Méthode permet de sauvegarder le stock via ce service
      *
-     * @param stock
+     * @param exemplaire
      * * @return le stock sauvegardé
      */
-    public Stock saveStock(Stock stock)
+    public ExemplaireDTO saveExemplaire(ExemplaireDTO exemplaire)
     {
-        return this.stockRepository.save(stock);
+        return this.exemplaireRepository.save(exemplaire);
 
     }
 
@@ -67,7 +66,7 @@ public class StockService {
      */
     public void deleteStockById(Long id)
     {
-        stockRepository.deleteById(id);
+        exemplaireRepository.deleteById(id);
     }
 
 

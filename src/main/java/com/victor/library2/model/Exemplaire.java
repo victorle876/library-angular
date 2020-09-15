@@ -9,31 +9,29 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Livres")
-public class Livre {
+@Table(name = "Exemplaire")
+public class Exemplaire {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String titre;
+    private String collection;
 
-    private String auteur;
+    private String editeur ;
 
-    private String categorie;
+    private String description;
 
-/*    @ManyToOne
-    @JoinColumn(name="exemplaire_id", referencedColumnName = "id")
-    private Exemplaire exemplaire;
+    private String isbn;
 
-    @OneToOne
-    @JoinColumn(name = "pret_id", referencedColumnName = "id")
-    private Pret pret;*/
+    private Integer nombre;
 
     @CreatedDate
     @Column(name = "createdAt")
@@ -43,8 +41,5 @@ public class Livre {
     @LastModifiedDate
     @Column(name = "updatedAt")
     private Date updatedAt;
-
-    private Date dateParution;
-
 
 }

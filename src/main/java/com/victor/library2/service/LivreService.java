@@ -1,6 +1,6 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.Livre;
+import com.victor.library2.model.LivreDTO;
 import com.victor.library2.repository.LivreRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,14 +24,14 @@ public class LivreService {
      *
      * * @return la liste des topos
      */
-    public List<Livre> getAllLivres()
+    public List<LivreDTO> getAllLivres()
     {
-        List<Livre> LivreList = livreRepository.findAll();
+        List<LivreDTO> LivreList = livreRepository.findAll();
         logger.debug(LivreList.size());
         if(LivreList.size() > 0) {
             return LivreList;
         } else {
-            return new ArrayList<Livre>();
+            return new ArrayList<LivreDTO>();
         }
     }
 
@@ -41,7 +41,7 @@ public class LivreService {
      * @param id
      * * @return le tivre via id
      */
-    public Livre getLivreById(Long id)
+    public LivreDTO getLivreById(Long id)
     {
         return this.livreRepository.findById(id).get();
 
@@ -53,7 +53,7 @@ public class LivreService {
      * @param livre
      * * @return le topo sauvegardé
      */
-    public Livre saveLivre(Livre livre)
+    public LivreDTO saveLivre(LivreDTO livre)
     {
         return this.livreRepository.save(livre);
 
