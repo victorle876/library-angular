@@ -1,17 +1,26 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.UtilisateurDTO;
+import com.victor.library2.model.*;
 import com.victor.library2.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.modelmapper.ModelMapper;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UtilisateurService {
+
+    private UtilisateurDTO mapUtilisateurToUtilisateurDTO(Utilisateur utilisateur) {
+        ModelMapper mapper = new ModelMapper();
+        UtilisateurDTO utilisateurDTO = mapper.map(utilisateur, UtilisateurDTO.class);
+        return utilisateurDTO;
+    }
 
     @Autowired
     UtilisateurRepository utilisateurRepository;
@@ -23,10 +32,12 @@ public class UtilisateurService {
      */
     public List<UtilisateurDTO> getAllUsers()
     {
-        List<UtilisateurDTO> utilisateurList = utilisateurRepository.findAll();
+        List<Utilisateur> utilisateurList = utilisateurRepository.findAll();
 
         if(utilisateurList.size() > 0) {
-            return utilisateurList;
+            return utilisateurList.stream()
+                    .map(this::mapUtilisateurToUtilisateurDTO)
+                    .collect(Collectors.toList());
         } else {
             return new ArrayList<UtilisateurDTO>();
         }
@@ -40,7 +51,8 @@ public class UtilisateurService {
      */
     public UtilisateurDTO getUserById(Long id)
     {
-        return this.utilisateurRepository.findById(id).get();
+        Utilisateur utilisateurId= this.utilisateurRepository.findById(id).get();
+        return mapUtilisateurToUtilisateurDTO(utilisateurId);
     }
 
     /**
@@ -49,9 +61,10 @@ public class UtilisateurService {
      * @param utilisateur
      * * @return la voie sauvegardée
      */
-    public UtilisateurDTO saveUser(UtilisateurDTO utilisateur)
+    public UtilisateurDTO saveUser(Utilisateur utilisateur)
     {
-        return this.utilisateurRepository.save(utilisateur);
+        Utilisateur utilisateurSauve= this.utilisateurRepository.save(utilisateur);
+        return mapUtilisateurToUtilisateurDTO(utilisateurSauve);
     }
 
     /**
@@ -72,6 +85,8 @@ public class UtilisateurService {
     public UtilisateurDTO getUtilisateurConnected (){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailUtilisateur = authentication.getName();
-        return this.utilisateurRepository.findByMail(emailUtilisateur).get();
+        Utilisateur utilisateurConnecte = this.utilisateurRepository.findByMail(emailUtilisateur).get();
+        return mapUtilisateurToUtilisateurDTO(utilisateurConnecte);
     }
+
 }

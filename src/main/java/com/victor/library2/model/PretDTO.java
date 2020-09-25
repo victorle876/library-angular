@@ -7,13 +7,11 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Pret")
-public class Pret {
+public class PretDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

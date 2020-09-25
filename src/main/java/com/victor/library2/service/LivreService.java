@@ -1,17 +1,25 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.LivreDTO;
+import com.victor.library2.model.*;
 import com.victor.library2.repository.LivreRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LivreService {
+
+    private LivreDTO mapLivreToLivreDTO(Livre livre) {
+        ModelMapper mapper = new ModelMapper();
+        LivreDTO livreDTO = mapper.map(livre, LivreDTO.class);
+        return livreDTO;
+    }
 
     @Autowired
     LivreRepository livreRepository;
@@ -26,10 +34,12 @@ public class LivreService {
      */
     public List<LivreDTO> getAllLivres()
     {
-        List<LivreDTO> LivreList = livreRepository.findAll();
+        List<Livre> LivreList = livreRepository.findAll();
         logger.debug(LivreList.size());
         if(LivreList.size() > 0) {
-            return LivreList;
+            return LivreList.stream()
+                    .map(this::mapLivreToLivreDTO)
+                    .collect(Collectors.toList());
         } else {
             return new ArrayList<LivreDTO>();
         }
@@ -43,7 +53,8 @@ public class LivreService {
      */
     public LivreDTO getLivreById(Long id)
     {
-        return this.livreRepository.findById(id).get();
+        Livre livreId= this.livreRepository.findById(id).get();
+        return mapLivreToLivreDTO(livreId);
 
     }
 
@@ -53,9 +64,11 @@ public class LivreService {
      * @param livre
      * * @return le topo sauvegardé
      */
-    public LivreDTO saveLivre(LivreDTO livre)
+    public LivreDTO saveLivre(Livre livre)
     {
-        return this.livreRepository.save(livre);
+
+        Livre livreSauve= this.livreRepository.save(livre);
+        return mapLivreToLivreDTO(livreSauve);
 
     }
 

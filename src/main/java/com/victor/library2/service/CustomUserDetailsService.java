@@ -30,13 +30,13 @@ public class CustomUserDetailsService {
      *
      */
 //    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+/*    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Utilisateur utilisateur = UtilisateurRepository.findByMail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Email " + username + " not found"));
         logger.debug(utilisateur.getId());
         return new org.springframework.security.core.userdetails.User(utilisateur.getMail(), utilisateur.getPassword(),
                 getAuthorities(utilisateur));
-    }
+    }*/
 
     /**
      * Méthode permet d'ajouter le role sur l'utilisateur
@@ -44,9 +44,9 @@ public class CustomUserDetailsService {
      * @param utilisateur
      * * @return la liste des commentaires
      */
-    private static Collection<? extends GrantedAuthority> getAuthorities(Utilisateur utilisateur) {
+/*    private static Collection<? extends GrantedAuthority> getAuthorities(Utilisateur utilisateur) {
         String[] userRoles = utilisateur.getRoles().stream().map((role) -> role.getName()).toArray(String[]::new);
         Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
         return authorities;
-    }
+    }*/
 }

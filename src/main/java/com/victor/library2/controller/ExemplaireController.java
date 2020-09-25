@@ -1,9 +1,12 @@
 package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
-import com.victor.library2.model.ExemplaireDTO;
+import com.victor.library2.model.*;
 import com.victor.library2.service.ExemplaireService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ParseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("/api/stock")
+@RequestMapping("/api/exemplaire")
 public class ExemplaireController {
 
     @Autowired
@@ -34,15 +36,19 @@ public class ExemplaireController {
         return ResponseEntity.ok().body(exemplaireId);
     }
 
-    @PostMapping("/addStock")
-    public ExemplaireDTO createExemplaire(@RequestBody ExemplaireDTO exemplaire) {
+    @PostMapping("/addExemplaire")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ExemplaireDTO createExemplaire(@RequestBody ExemplaireDTO exemplaireDTO) {
+        Exemplaire exemplaire = convertToEntity(exemplaireDTO);
         return this.exemplaireService.saveExemplaire(exemplaire);
     }
 
-    @PutMapping("/updateStock/{id}")
+    @PutMapping("/updateExemplaire/{id}")
     public ResponseEntity<ExemplaireDTO> updateStock(@PathVariable(value = "id") Long stockId,
                                                   @RequestBody ExemplaireDTO exemplaireDetails) throws ResourceNotFoundException {
-        ExemplaireDTO exemplaire = exemplaireService.getExemplaireById(stockId);
+        ExemplaireDTO exemplaireDTO = exemplaireService.getExemplaireById(stockId);
+        Exemplaire exemplaire = convertToEntity(exemplaireDTO);
         if (stockId == null){
                  new ResourceNotFoundException("Stock not found for this id :: " + stockId);
         }
@@ -51,16 +57,23 @@ public class ExemplaireController {
         return ResponseEntity.ok(updatedExemplaire);
     }
 
-    @DeleteMapping("/deleteStock/{id}")
+    @DeleteMapping("/deleteExemplaire/{id}")
     public Map<String, Boolean> deleteExemplaire(@PathVariable(value = "id") Long exemplaireId)
             throws ResourceNotFoundException {
         ExemplaireDTO exemplaire = exemplaireService.getExemplaireById(exemplaireId);
         if (exemplaireId == null){
                  new ResourceNotFoundException("Employee not found for this id :: " + exemplaireId);
         }
-        this.exemplaireService.deleteStockById(exemplaireId);
+        this.exemplaireService.deleteExemplaireById(exemplaireId);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;
+    }
+
+    private Exemplaire convertToEntity(ExemplaireDTO exemplaireDTO) throws ParseException {
+        ModelMapper mapper = new ModelMapper();
+        Exemplaire exemplaire = mapper.map(exemplaireDTO, Exemplaire.class);
+
+        return exemplaire;
     }
 }

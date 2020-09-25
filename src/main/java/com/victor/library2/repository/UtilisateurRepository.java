@@ -1,14 +1,14 @@
 package com.victor.library2.repository;
 
-import com.victor.library2.model.UtilisateurDTO;
+import com.victor.library2.model.Utilisateur;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UtilisateurRepository extends JpaRepository<UtilisateurDTO, Long> {
+public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> {
 
-    Optional<UtilisateurDTO> findByMail(String mail);
+    Optional<Utilisateur> findByMail(String mail);
 
 }

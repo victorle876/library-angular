@@ -6,16 +6,19 @@ import com.victor.library2.model.Utilisateur;
 import com.victor.library2.model.UtilisateurDTO;
 import com.victor.library2.service.LivreService;
 import com.victor.library2.service.UtilisateurService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ParseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/utilisateur")
 public class UtilisateurController {
 
@@ -38,22 +41,29 @@ public class UtilisateurController {
     }
 
     @PostMapping("/addUtilisateur")
-    public UtilisateurDTO createUtilisateur(@RequestBody UtilisateurDTO utilisateur) {
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public UtilisateurDTO createUtilisateur(@RequestBody UtilisateurDTO utilisateurDTO) {
+        Utilisateur utilisateur = convertToEntity(utilisateurDTO);
         return this.utilisateurService.saveUser(utilisateur);
     }
 
     @PutMapping("/updateUtilisateur/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public ResponseEntity<UtilisateurDTO> updateUtilisateur(@PathVariable(value = "id") Long utilisateurId,
-                                                @RequestBody UtilisateurDTO utilisateurDetails) throws ResourceNotFoundException {
-        UtilisateurDTO utilisateur = utilisateurService.getUserById(utilisateurId);
+                                              @RequestBody UtilisateurDTO utilisateurDetails)
+                                                throws ResourceNotFoundException {
+        UtilisateurDTO utilisateurDTO = utilisateurService.getUserById(utilisateurId);
+        Utilisateur utilisateur = convertToEntity(utilisateurDTO);
         if (utilisateurId == null){
             new ResourceNotFoundException("Employee not found for this id :: " + utilisateurId);
         }
-        utilisateur.setId(utilisateurDetails.getId());
+/*        utilisateur.setId(utilisateurDetails.getId());
         utilisateur.setAge(utilisateurDetails.getAge());
         utilisateur.setPrenom(utilisateurDetails.getPrenom());
         utilisateur.setUsername(utilisateurDetails.getUsername());
-        utilisateur.setMail(utilisateurDetails.getMail());
+        utilisateur.setMail(utilisateurDetails.getMail());*/
         final UtilisateurDTO updatedUtilisateur = utilisateurService.saveUser(utilisateur);
         return ResponseEntity.ok(updatedUtilisateur);
     }
@@ -69,5 +79,11 @@ public class UtilisateurController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;
+    }
+    private Utilisateur convertToEntity(UtilisateurDTO utilisateurDTO) throws ParseException {
+        ModelMapper mapper = new ModelMapper();
+        Utilisateur utilisateur = mapper.map(utilisateurDTO, Utilisateur.class);
+
+        return utilisateur;
     }
 }

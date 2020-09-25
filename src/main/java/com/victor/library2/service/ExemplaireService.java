@@ -1,21 +1,28 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.ExemplaireDTO;
+import com.victor.library2.model.*;
 import com.victor.library2.repository.ExemplaireRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExemplaireService {
 
+    private ExemplaireDTO mapExemplaireToExemplaireDTO(Exemplaire exemplaire) {
+        ModelMapper mapper = new ModelMapper();
+        ExemplaireDTO exemplaireDTO = mapper.map(exemplaire, ExemplaireDTO.class);
+        return exemplaireDTO;
+    }
+
     @Autowired
     ExemplaireRepository exemplaireRepository;
-
 
     private static final Logger logger = LogManager.getLogger(ExemplaireService.class);
 
@@ -26,10 +33,12 @@ public class ExemplaireService {
      */
     public List<ExemplaireDTO> getAllExemplaires()
     {
-        List<ExemplaireDTO> exemplaireList = exemplaireRepository.findAll();
+        List<Exemplaire> exemplaireList = exemplaireRepository.findAll();
         logger.debug(exemplaireList.size());
         if(exemplaireList.size() > 0) {
-            return exemplaireList;
+            return exemplaireList.stream()
+                    .map(this::mapExemplaireToExemplaireDTO)
+                    .collect(Collectors.toList());
         } else {
             return new ArrayList<ExemplaireDTO>();
         }
@@ -43,7 +52,8 @@ public class ExemplaireService {
      */
     public ExemplaireDTO getExemplaireById(Long id)
     {
-        return this.exemplaireRepository.findById(id).get();
+        Exemplaire exemplaireId= this.exemplaireRepository.findById(id).get();
+        return mapExemplaireToExemplaireDTO(exemplaireId);
 
     }
 
@@ -53,9 +63,10 @@ public class ExemplaireService {
      * @param exemplaire
      * * @return le stock sauvegardé
      */
-    public ExemplaireDTO saveExemplaire(ExemplaireDTO exemplaire)
+    public ExemplaireDTO saveExemplaire(Exemplaire exemplaire)
     {
-        return this.exemplaireRepository.save(exemplaire);
+        Exemplaire exemplaireSauve= this.exemplaireRepository.save(exemplaire);
+        return mapExemplaireToExemplaireDTO(exemplaireSauve);
 
     }
 
@@ -64,7 +75,7 @@ public class ExemplaireService {
      *
      * @param id
      */
-    public void deleteStockById(Long id)
+    public void deleteExemplaireById(Long id)
     {
         exemplaireRepository.deleteById(id);
     }

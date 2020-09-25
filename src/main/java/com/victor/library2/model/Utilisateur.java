@@ -49,17 +49,6 @@ public class Utilisateur {
     private Pret pret;*/
 
 
-    public Utilisateur(Long id, String username, String prenom, String mail, String password, Integer age, Date createdAt, Date updatedAt) {
-        this.id = id;
-        this.username = username;
-        this.prenom = prenom;
-        this.mail = mail;
-        this.password = password;
-        this.age = age;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
     @PrePersist
     protected void prePersist() {
         if (this.createdAt == null) createdAt = new Date();
@@ -71,13 +60,27 @@ public class Utilisateur {
         this.updatedAt = new Date();
     }
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+/*    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "user_role",
             joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
-    private List<Role> roles;
+    private List<Role> roles;*/
 
+    @Override
+    public String toString() {
+        return "Utilisateur{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", mail='" + mail + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                ", statut='" + statut + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
 
 

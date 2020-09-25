@@ -1,9 +1,15 @@
 package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
+import com.victor.library2.model.Livre;
 import com.victor.library2.model.LivreDTO;
+import com.victor.library2.model.Utilisateur;
+import com.victor.library2.model.UtilisateurDTO;
 import com.victor.library2.service.LivreService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ParseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/livre")
 public class LivreController {
 
@@ -25,7 +30,7 @@ public class LivreController {
     }
 
     @GetMapping("/detailLivre/{id}")
-    public ResponseEntity<LivreDTO> getlivreById(@PathVariable(value = "id") Long id)
+    public ResponseEntity<LivreDTO> getLivreById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
         LivreDTO livreId = livreService.getLivreById(id);
         if (livreId == null){
@@ -35,15 +40,20 @@ public class LivreController {
     }
 
     @PostMapping("/addLivre")
-    public LivreDTO createLivre(@RequestBody LivreDTO livre) {
-
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public LivreDTO createLivre(@RequestBody LivreDTO livreDTO) {
+        Livre livre = convertToEntity(livreDTO);
         return this.livreService.saveLivre(livre);
     }
 
     @PutMapping("/updateLivre/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
     public ResponseEntity<LivreDTO> updatelivre(@PathVariable(value = "id") Long livreId,
                                                 @RequestBody LivreDTO livreDetails) throws ResourceNotFoundException {
-        LivreDTO livre = livreService.getLivreById(livreId);
+        LivreDTO livreDTO = livreService.getLivreById(livreId);
+        Livre livre = convertToEntity(livreDTO);
         if (livreId == null){
                  new ResourceNotFoundException("Employee not found for this id :: " + livreId);
         }
@@ -67,5 +77,12 @@ public class LivreController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;
+    }
+
+    private Livre convertToEntity(LivreDTO livreDTO) throws ParseException {
+        ModelMapper mapper = new ModelMapper();
+        Livre livre = mapper.map(livreDTO, Livre.class);
+
+        return livre;
     }
 }
