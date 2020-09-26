@@ -1,11 +1,15 @@
 package com.victor.library2.model;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -41,6 +45,26 @@ public class Pret {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @CreatedDate
+    @Column(name = "createdAt")
+    private Date createdAt;
+
+
+    @LastModifiedDate
+    @Column(name = "updatedAt")
+    private Date updatedAt;
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.createdAt == null) createdAt = new Date();
+        if (this.updatedAt == null) updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void preUpdate() {
+        this.updatedAt = new Date();
     }
 
 }
