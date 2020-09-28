@@ -1,10 +1,7 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.Exemplaire;
-import com.victor.library2.model.ExemplaireDTO;
-import com.victor.library2.model.PretDTO;
-import com.victor.library2.model.Pret;
-import com.victor.library2.repository.ExemplaireRepository;
+import com.victor.library2.model.dto.PretDTO;
+import com.victor.library2.model.entity.Pret;
 import com.victor.library2.repository.PretRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

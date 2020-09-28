@@ -1,4 +1,4 @@
-package com.victor.library2.model;
+package com.victor.library2.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,10 +44,8 @@ public class Utilisateur {
     @Column(name = "updatedAt")
     private Date updatedAt;
 
-/*    @ManyToOne
-    @JoinColumn(name="pret_id", referencedColumnName = "id")
-    private Pret pret;*/
-
+    @OneToMany(mappedBy="utilisateur")
+    private List<Pret> prets;
 
     @PrePersist
     protected void prePersist() {

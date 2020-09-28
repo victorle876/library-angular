@@ -1,4 +1,4 @@
-package com.victor.library2.model;
+package com.victor.library2.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,24 +28,22 @@ public class Livre {
 
     private String categorie;
 
-/*    @ManyToOne
-    @JoinColumn(name="exemplaire_id", referencedColumnName = "id")
-    private Exemplaire exemplaire;
-
     @OneToOne
     @JoinColumn(name = "pret_id", referencedColumnName = "id")
-    private Pret pret;*/
+    private Pret pret;
 
     @CreatedDate
     @Column(name = "createdAt")
     private Date createdAt;
 
-
     @LastModifiedDate
     @Column(name = "updatedAt")
     private Date updatedAt;
 
-    private Date dateParution;
+    //private Date dateParution;
+
+    @OneToMany(mappedBy="livre")
+    private List<Exemplaire> exemplaires;
 
     @PrePersist
     protected void prePersist() {

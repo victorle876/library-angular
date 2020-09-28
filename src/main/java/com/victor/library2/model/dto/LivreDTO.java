@@ -1,5 +1,7 @@
-package com.victor.library2.model;
+package com.victor.library2.model.dto;
 
+import com.victor.library2.model.entity.Exemplaire;
+import com.victor.library2.model.entity.Livre;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,32 +11,27 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExemplaireDTO {
-
+public class LivreDTO {
     private Long id;
 
-    private String collection;
+    private String titre;
 
-    private String editeur ;
+    private String auteur;
 
-    private String description;
+    private String categorie;
 
-    private String isbn;
-
-    @CreatedDate
-    @Column(name = "createdAt")
     private Date createdAt;
 
-    @LastModifiedDate
-    @Column(name = "updatedAt")
     private Date updatedAt;
 
-    private Integer nombre;
+   // private Date dateParution;
 
+    private List<Exemplaire> exemplaires;
 
 }

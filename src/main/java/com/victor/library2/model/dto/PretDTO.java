@@ -1,11 +1,13 @@
-package com.victor.library2.model;
+package com.victor.library2.model.dto;
 
+import com.victor.library2.model.entity.Utilisateur;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -33,12 +35,10 @@ public class PretDTO {
 
     private Integer nombreProlonge;
 
-    public Long getId() {
-        return id;
-    }
+    private Date createdAt;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Date updatedAt;
+
+    private Utilisateur utilisateur;
 
 }

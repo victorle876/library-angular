@@ -1,6 +1,7 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.*;
+import com.victor.library2.model.dto.UtilisateurDTO;
+import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -8,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,12 +1,9 @@
 package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
-import com.victor.library2.model.Pret;
-import com.victor.library2.model.PretDTO;
-import com.victor.library2.model.Utilisateur;
-import com.victor.library2.model.UtilisateurDTO;
+import com.victor.library2.model.entity.Pret;
+import com.victor.library2.model.dto.PretDTO;
 import com.victor.library2.service.PretService;
-import com.victor.library2.service.UtilisateurService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
@@ -25,12 +22,12 @@ public class PretController {
     @Autowired
     private PretService pretService;
 
-    @GetMapping("/listPret")
+    @GetMapping("/list")
     public List<PretDTO> getAllPrets() {
         return this.pretService.getAllPrets();
     }
 
-    @GetMapping("/detailPret/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<PretDTO> getPretById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
         PretDTO pretId = pretService.getPretById(id);
@@ -40,7 +37,7 @@ public class PretController {
         return ResponseEntity.ok().body(pretId);
     }
 
-    @PostMapping("/addPret")
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public PretDTO createPret(@RequestBody PretDTO pretDTO) {
@@ -48,7 +45,7 @@ public class PretController {
         return this.pretService.savePret(pret);
     }
 
-    @PutMapping("/updatePret/{id}")
+    @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<PretDTO> updateUtilisateur(@PathVariable(value = "id") Long pretId,
@@ -56,23 +53,18 @@ public class PretController {
         PretDTO pretDTO = pretService.getPretById(pretId);
         Pret pret = convertToEntity(pretDTO);
         if (pretId == null){
-            new ResourceNotFoundException("Employee not found for this id :: " + pretId);
+            new ResourceNotFoundException("Pret not found for this id :: " + pretId);
         }
-/*        utilisateur.setId(utilisateurDetails.getId());
-        utilisateur.setAge(utilisateurDetails.getAge());
-        utilisateur.setPrenom(utilisateurDetails.getPrenom());
-        utilisateur.setUsername(utilisateurDetails.getUsername());
-        utilisateur.setMail(utilisateurDetails.getMail());*/
         final PretDTO updatedPret = pretService.savePret(pret);
         return ResponseEntity.ok(updatedPret);
     }
 
-    @DeleteMapping("/deletePret/{id}")
+    @DeleteMapping("/delete/{id}")
     public Map<String, Boolean> deletePret(@PathVariable(value = "id") Long pretId)
             throws ResourceNotFoundException {
         PretDTO pret= pretService.getPretById(pretId);
         if (pretId == null){
-            new ResourceNotFoundException("Utilisateur not found for this id :: " + pretId);
+            new ResourceNotFoundException("Pret not found for this id :: " + pretId);
         }
         this.pretService.deletePretById(pretId);
         Map<String, Boolean> response = new HashMap<>();

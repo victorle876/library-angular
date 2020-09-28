@@ -1,4 +1,4 @@
-package com.victor.library2.model;
+package com.victor.library2.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,5 +52,11 @@ public class Exemplaire {
     protected void preUpdate() {
         this.updatedAt = new Date();
     }
+
+    @ManyToOne
+    @JoinColumn(name="livre_id", referencedColumnName = "id")
+    private Livre livre;
+
+    private Date dateParution;
 
 }

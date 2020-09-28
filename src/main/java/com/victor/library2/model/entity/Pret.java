@@ -1,4 +1,4 @@
-package com.victor.library2.model;
+package com.victor.library2.model.entity;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,13 +23,13 @@ public class Pret {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-/*    @OneToOne
+    @OneToOne
     @JoinColumn(name = "livre_id", referencedColumnName = "id")
     private Livre livre;
 
     @ManyToOne
     @JoinColumn(name="utilisateur_id", referencedColumnName = "id")
-    private Utilisateur utilisateur;*/
+    private Utilisateur utilisateur;
 
     private Boolean emprunte;
 

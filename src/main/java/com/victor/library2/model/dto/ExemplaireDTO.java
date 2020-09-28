@@ -1,5 +1,6 @@
-package com.victor.library2.model;
+package com.victor.library2.model.dto;
 
+import com.victor.library2.model.entity.Livre;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,24 +15,28 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LivreDTO {
+public class ExemplaireDTO {
+
     private Long id;
 
-    private String titre;
+    private String collection;
 
-    private String auteur;
+    private String editeur ;
 
-    private String categorie;
+    private String description;
 
-    @CreatedDate
-    @Column(name = "createdAt")
+    private String isbn;
+
     private Date createdAt;
 
-    @LastModifiedDate
-    @Column(name = "updatedAt")
     private Date updatedAt;
 
+    private Integer nombre;
+
+    private Livre livre;
+
     private Date dateParution;
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.victor.library2.service;
 
-import com.victor.library2.model.*;
+import com.victor.library2.model.dto.LivreDTO;
+import com.victor.library2.model.entity.Livre;
 import com.victor.library2.repository.LivreRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

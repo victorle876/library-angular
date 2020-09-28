@@ -1,10 +1,8 @@
 package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
-import com.victor.library2.model.Livre;
-import com.victor.library2.model.Utilisateur;
-import com.victor.library2.model.UtilisateurDTO;
-import com.victor.library2.service.LivreService;
+import com.victor.library2.model.entity.Utilisateur;
+import com.victor.library2.model.dto.UtilisateurDTO;
 import com.victor.library2.service.UtilisateurService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +23,12 @@ public class UtilisateurController {
     @Autowired
     private UtilisateurService utilisateurService;
 
-    @GetMapping("/listUtilisateur")
+    @GetMapping("/list")
     public List<UtilisateurDTO> getAllUtilisateurs() {
         return this.utilisateurService.getAllUsers();
     }
 
-    @GetMapping("/detailUtilisateur/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<UtilisateurDTO> getUtilisateurById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
         UtilisateurDTO utilisateurId = utilisateurService.getUserById(id);
@@ -40,7 +38,7 @@ public class UtilisateurController {
         return ResponseEntity.ok().body(utilisateurId);
     }
 
-    @PostMapping("/addUtilisateur")
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public UtilisateurDTO createUtilisateur(@RequestBody UtilisateurDTO utilisateurDTO) {
@@ -48,27 +46,23 @@ public class UtilisateurController {
         return this.utilisateurService.saveUser(utilisateur);
     }
 
-    @PutMapping("/updateUtilisateur/{id}")
+    @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<UtilisateurDTO> updateUtilisateur(@PathVariable(value = "id") Long utilisateurId,
                                               @RequestBody UtilisateurDTO utilisateurDetails)
-                                                throws ResourceNotFoundException {
-        UtilisateurDTO utilisateurDTO = utilisateurService.getUserById(utilisateurId);
-        Utilisateur utilisateur = convertToEntity(utilisateurDTO);
+                                                 {
+        System.out.println("utilisateurDTO" + utilisateurDetails);
+        Utilisateur utilisateur = convertToEntity(utilisateurDetails);
         if (utilisateurId == null){
             new ResourceNotFoundException("Employee not found for this id :: " + utilisateurId);
         }
-/*        utilisateur.setId(utilisateurDetails.getId());
-        utilisateur.setAge(utilisateurDetails.getAge());
-        utilisateur.setPrenom(utilisateurDetails.getPrenom());
-        utilisateur.setUsername(utilisateurDetails.getUsername());
-        utilisateur.setMail(utilisateurDetails.getMail());*/
+        System.out.println("utilisateur" + utilisateur);
         final UtilisateurDTO updatedUtilisateur = utilisateurService.saveUser(utilisateur);
         return ResponseEntity.ok(updatedUtilisateur);
     }
 
-    @DeleteMapping("/deleteLivre/{id}")
+    @DeleteMapping("/delete/{id}")
     public Map<String, Boolean> deleteUtilisateur(@PathVariable(value = "id") Long utilisateurId)
             throws ResourceNotFoundException {
         UtilisateurDTO utilisateur= utilisateurService.getUserById(utilisateurId);
@@ -83,7 +77,6 @@ public class UtilisateurController {
     private Utilisateur convertToEntity(UtilisateurDTO utilisateurDTO) throws ParseException {
         ModelMapper mapper = new ModelMapper();
         Utilisateur utilisateur = mapper.map(utilisateurDTO, Utilisateur.class);
-
         return utilisateur;
     }
 }

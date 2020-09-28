@@ -1,9 +1,7 @@
-package com.victor.library2.model;
+package com.victor.library2.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.victor.library2.model.entity.Pret;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -14,6 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UtilisateurDTO {
 
     private Long id;
@@ -30,30 +29,12 @@ public class UtilisateurDTO {
 
     private String statut;
 
-    @CreatedDate
-    @Column(name = "createdAt")
     private Date createdAt;
 
-
-    @LastModifiedDate
-    @Column(name = "updatedAt")
     private Date updatedAt;
 
-/*    @ManyToOne
-    @JoinColumn(name="pret_id", referencedColumnName = "id")
-    private Pret pret;*/
+    private List<Pret> prets;
 
-
-    @PrePersist
-    protected void prePersist() {
-        if (this.createdAt == null) createdAt = new Date();
-        if (this.updatedAt == null) updatedAt = new Date();
-    }
-
-    @PreUpdate
-    protected void preUpdate() {
-        this.updatedAt = new Date();
-    }
 
    /* @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
