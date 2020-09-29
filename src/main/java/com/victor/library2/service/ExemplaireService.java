@@ -81,5 +81,20 @@ public class ExemplaireService {
         exemplaireRepository.deleteById(id);
     }
 
+    public List<Exemplaire> findSiteByTitre(String recherche1) {
+        List<Exemplaire>  exemplaireTrouveByTitre = this.exemplaireRepository.findByLivre(recherche1);
+        if (exemplaireTrouveByTitre == null){
+            throw new RuntimeException("Titre introuvable");
+        }
+        return exemplaireTrouveByTitre;
+    }
+
+    public List<Exemplaire> findSiteByAuteur(String recherche1) {
+        List<Exemplaire>  exemplaireTrouveByAuteur = this.exemplaireRepository.findByLivre2(recherche1);
+        if (exemplaireTrouveByAuteur == null){
+            throw new RuntimeException("Auteur introuvable");
+        }
+        return exemplaireTrouveByAuteur;
+    }
 
 }

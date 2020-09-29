@@ -1,6 +1,7 @@
 package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
+import com.victor.library2.model.dto.LivreDTO;
 import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.model.dto.UtilisateurDTO;
 import com.victor.library2.service.UtilisateurService;
@@ -24,8 +25,9 @@ public class UtilisateurController {
     private UtilisateurService utilisateurService;
 
     @GetMapping("/list")
-    public List<UtilisateurDTO> getAllUtilisateurs() {
-        return this.utilisateurService.getAllUsers();
+    public ResponseEntity<List<UtilisateurDTO>> getAllUtilisateurs() {
+        List<UtilisateurDTO> ListUtilisateursDto = this.utilisateurService.getAllUsers();
+        return ResponseEntity.ok().body(ListUtilisateursDto);
     }
 
     @GetMapping("/detail/{id}")
@@ -41,9 +43,10 @@ public class UtilisateurController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public UtilisateurDTO createUtilisateur(@RequestBody UtilisateurDTO utilisateurDTO) {
+    public ResponseEntity<UtilisateurDTO> createUtilisateur(@RequestBody UtilisateurDTO utilisateurDTO) {
         Utilisateur utilisateur = convertToEntity(utilisateurDTO);
-        return this.utilisateurService.saveUser(utilisateur);
+        UtilisateurDTO utilisateurSauve = this.utilisateurService.saveUser(utilisateur);
+        return ResponseEntity.ok().body(utilisateurSauve);
     }
 
     @PutMapping("/update/{id}")

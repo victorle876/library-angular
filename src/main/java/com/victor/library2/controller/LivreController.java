@@ -2,6 +2,7 @@ package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
 import com.victor.library2.model.dto.ExemplaireDTO;
+import com.victor.library2.model.dto.UtilisateurDTO;
 import com.victor.library2.model.entity.Exemplaire;
 import com.victor.library2.model.entity.Livre;
 import com.victor.library2.model.dto.LivreDTO;
@@ -29,8 +30,9 @@ public class LivreController {
     private ExemplaireService exemplaireService;
 
     @GetMapping("/list")
-    public List<LivreDTO> getAllLivres() {
-        return livreService.getAllLivres();
+    public ResponseEntity<List<LivreDTO>> getAllLivres() {
+        List<LivreDTO> ListLivresDto = this.livreService.getAllLivres();
+        return ResponseEntity.ok().body(ListLivresDto);
     }
 
     @GetMapping("/detail/{id}")
@@ -46,17 +48,21 @@ public class LivreController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public LivreDTO createLivre(@RequestBody LivreDTO livreDTO) {
+    public ResponseEntity<LivreDTO> createLivre(@RequestBody LivreDTO livreDTO) {
         Livre livre = convertToEntity(livreDTO);
-        return this.livreService.saveLivre(livre);
+        LivreDTO livreSauve = this.livreService.saveLivre(livre);
+        return ResponseEntity.ok().body(livreSauve);
     }
 
     @PostMapping("/addExemplaire/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ExemplaireDTO createExemplaire(@RequestBody ExemplaireDTO exemplaireDTO,@PathVariable(value = "id") Long livreId) {
+    public ResponseEntity<ExemplaireDTO> createExemplaire(@RequestBody ExemplaireDTO exemplaireDTO,@PathVariable(value = "id") Long livreId) {
+        LivreDTO livreDTO = this.livreService.getLivreById(livreId);
+        exemplaireDTO.setLivreDTO(livreDTO);
         Exemplaire exemplaire = convertToEntity(exemplaireDTO);
-        return this.exemplaireService.saveExemplaire(exemplaire);
+        ExemplaireDTO exemplaireSauveDTO = this.exemplaireService.saveExemplaire(exemplaire);
+        return ResponseEntity.ok().body(exemplaireSauveDTO);
     }
 
     @PutMapping("/update/{id}")

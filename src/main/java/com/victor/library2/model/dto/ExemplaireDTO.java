@@ -1,20 +1,11 @@
 package com.victor.library2.model.dto;
 
-import com.victor.library2.model.entity.Livre;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
+import com.victor.library2.model.entity.Pret;
+import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class ExemplaireDTO {
 
     private Long id;
@@ -33,10 +24,10 @@ public class ExemplaireDTO {
 
     private Integer nombre;
 
-    private Livre livre;
+    private LivreDTO livreDTO;
 
     private Date dateParution;
 
-
+    private Pret pret;
 
 }

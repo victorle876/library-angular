@@ -1,10 +1,7 @@
 package com.victor.library2.model.entity;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -12,10 +9,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Table(name = "Pret")
 public class Pret {
 
@@ -24,8 +18,8 @@ public class Pret {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "livre_id", referencedColumnName = "id")
-    private Livre livre;
+    @JoinColumn(name = "exemplaire_id", referencedColumnName = "id")
+    private Exemplaire exemplaire;
 
     @ManyToOne
     @JoinColumn(name="utilisateur_id", referencedColumnName = "id")

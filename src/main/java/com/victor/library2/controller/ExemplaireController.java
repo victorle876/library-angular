@@ -2,8 +2,12 @@ package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
 import com.victor.library2.model.dto.ExemplaireDTO;
+import com.victor.library2.model.dto.LivreDTO;
+import com.victor.library2.model.dto.PretDTO;
 import com.victor.library2.model.entity.Exemplaire;
+import com.victor.library2.model.entity.Pret;
 import com.victor.library2.service.ExemplaireService;
+import com.victor.library2.service.PretService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
@@ -22,9 +26,13 @@ public class ExemplaireController {
     @Autowired
     private ExemplaireService exemplaireService;
 
+    @Autowired
+    private PretService pretService;
+
     @GetMapping("/list")
-    public List<ExemplaireDTO> getAllExemplairess() {
-        return exemplaireService.getAllExemplaires();
+    public ResponseEntity<List<ExemplaireDTO>> getAllExemplaires() {
+        List<ExemplaireDTO> ListExemplairesDto = this.exemplaireService.getAllExemplaires();
+        return ResponseEntity.ok().body(ListExemplairesDto);
     }
 
     @GetMapping("/detail/{id}")
@@ -37,13 +45,16 @@ public class ExemplaireController {
         return ResponseEntity.ok().body(exemplaireId);
     }
 
-/*    @PostMapping("/add")
+    @PostMapping("/addPret/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ExemplaireDTO createExemplaire(@RequestBody ExemplaireDTO exemplaireDTO) {
-        Exemplaire exemplaire = convertToEntity(exemplaireDTO);
-        return this.exemplaireService.saveExemplaire(exemplaire);
-    }*/
+    public ResponseEntity<PretDTO> createPret(@RequestBody PretDTO pretDTO, @PathVariable(value = "id") Long exemplaireId) {
+        ExemplaireDTO exemplaireDTO = this.exemplaireService.getExemplaireById(exemplaireId);
+        pretDTO.setExemplaireDTO(exemplaireDTO);
+        Pret pret = convertToEntity(pretDTO);
+        PretDTO pretSauveDTO = this.pretService.savePret(pret);
+        return ResponseEntity.ok().body(pretSauveDTO);
+    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<ExemplaireDTO> updateStock(@PathVariable(value = "id") Long stockId,
@@ -75,5 +86,12 @@ public class ExemplaireController {
         Exemplaire exemplaire = mapper.map(exemplaireDTO, Exemplaire.class);
 
         return exemplaire;
+    }
+
+    private Pret convertToEntity(PretDTO pretDTO) throws ParseException {
+        ModelMapper mapper = new ModelMapper();
+        Pret pret = mapper.map(pretDTO, Pret.class);
+
+        return pret;
     }
 }

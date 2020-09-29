@@ -1,6 +1,7 @@
 package com.victor.library2.controller;
 
 import com.victor.library2.exception.ResourceNotFoundException;
+import com.victor.library2.model.dto.ExemplaireDTO;
 import com.victor.library2.model.entity.Pret;
 import com.victor.library2.model.dto.PretDTO;
 import com.victor.library2.service.PretService;
@@ -23,8 +24,9 @@ public class PretController {
     private PretService pretService;
 
     @GetMapping("/list")
-    public List<PretDTO> getAllPrets() {
-        return this.pretService.getAllPrets();
+    public ResponseEntity<List<PretDTO>> getAllPrets() {
+        List<PretDTO> ListPretsDto = this.pretService.getAllPrets();
+        return ResponseEntity.ok().body(ListPretsDto);
     }
 
     @GetMapping("/detail/{id}")
@@ -35,14 +37,6 @@ public class PretController {
             new ResourceNotFoundException("Pret not found for this id :: " + pretId);
         }
         return ResponseEntity.ok().body(pretId);
-    }
-
-    @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public PretDTO createPret(@RequestBody PretDTO pretDTO) {
-        Pret pret = convertToEntity(pretDTO);
-        return this.pretService.savePret(pret);
     }
 
     @PutMapping("/update/{id}")
