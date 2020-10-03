@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class ExemplaireController {
     @PostMapping("/addPret/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<PretDTO> createPret(@RequestBody PretDTO pretDTO, @PathVariable(value = "id") Long exemplaireId) {
+    public ResponseEntity<PretDTO> createPret(@Valid @RequestBody PretDTO pretDTO, @PathVariable(value = "id") Long exemplaireId) {
         ExemplaireDTO exemplaireDTO = this.exemplaireService.getExemplaireById(exemplaireId);
         pretDTO.setExemplaireDTO(exemplaireDTO);
         Pret pret = convertToEntity(pretDTO);
@@ -58,7 +59,7 @@ public class ExemplaireController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<ExemplaireDTO> updateStock(@PathVariable(value = "id") Long stockId,
-                                                  @RequestBody ExemplaireDTO exemplaireDetails) throws ResourceNotFoundException {
+                                                  @Valid @RequestBody ExemplaireDTO exemplaireDetails) throws ResourceNotFoundException {
         Exemplaire exemplaire = convertToEntity(exemplaireDetails);
         if (stockId == null){
                  new ResourceNotFoundException("Exemplaire not found for this id :: " + stockId);

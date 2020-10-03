@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
 
@@ -17,12 +18,16 @@ public class Exemplaire {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
     private String collection;
 
+    @NotBlank
     private String editeur ;
 
+    @NotBlank
     private String description;
 
+    @NotBlank
     private String isbn;
 
     private Integer nombre;

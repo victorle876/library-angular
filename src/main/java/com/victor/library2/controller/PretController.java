@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class PretController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<PretDTO> updateUtilisateur(@PathVariable(value = "id") Long pretId,
-                                                @RequestBody PretDTO pretDetails) throws ResourceNotFoundException {
+                                                @Valid @RequestBody PretDTO pretDetails) throws ResourceNotFoundException {
         PretDTO pretDTO = pretService.getPretById(pretId);
         Pret pret = convertToEntity(pretDTO);
         if (pretId == null){

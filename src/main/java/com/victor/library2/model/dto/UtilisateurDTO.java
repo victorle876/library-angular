@@ -1,13 +1,17 @@
 package com.victor.library2.model.dto;
 
 import com.victor.library2.model.entity.Pret;
+import com.victor.library2.model.entity.Role;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -35,7 +39,7 @@ public class UtilisateurDTO {
 
     private List<PretDTO> pretsDTO;
 
-
+    private Set<RoleDTO> rolesDTO = new HashSet<>();
 }
 
 

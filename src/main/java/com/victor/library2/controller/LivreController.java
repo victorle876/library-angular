@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class LivreController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<LivreDTO> createLivre(@RequestBody LivreDTO livreDTO) {
+    public ResponseEntity<LivreDTO> createLivre(@Valid @RequestBody LivreDTO livreDTO) {
         Livre livre = convertToEntity(livreDTO);
         LivreDTO livreSauve = this.livreService.saveLivre(livre);
         return ResponseEntity.ok().body(livreSauve);
@@ -57,7 +58,7 @@ public class LivreController {
     @PostMapping("/addExemplaire/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<ExemplaireDTO> createExemplaire(@RequestBody ExemplaireDTO exemplaireDTO,@PathVariable(value = "id") Long livreId) {
+    public ResponseEntity<ExemplaireDTO> createExemplaire(@Valid @RequestBody ExemplaireDTO exemplaireDTO,@PathVariable(value = "id") Long livreId) {
         LivreDTO livreDTO = this.livreService.getLivreById(livreId);
         exemplaireDTO.setLivreDTO(livreDTO);
         Exemplaire exemplaire = convertToEntity(exemplaireDTO);
