@@ -43,6 +43,8 @@ public class Utilisateur {
     @OneToMany(mappedBy="utilisateur")
     private List<Pret> prets;
 
+    private String token;
+
     @PrePersist
     protected void prePersist() {
         if (this.createdAt == null) createdAt = new Date();

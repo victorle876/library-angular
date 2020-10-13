@@ -1,67 +1,49 @@
 package com.victor.library2.controller;
 
-import com.victor.library2.payload.request.LoginRequest;
-import com.victor.library2.payload.request.SignupRequest;
-import com.victor.library2.payload.response.JwtResponse;
-import com.victor.library2.payload.response.MessageResponse;
-import com.victor.library2.repository.UtilisateurRepository;
-import com.victor.library2.security.jwt.JwtUtils;
-import com.victor.library2.service.UserDetailsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.victor.library2.model.entity.Utilisateur;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    UtilisateurRepository utilisateurRepository;
+    @PostMapping("login")
+    public Utilisateur login(@RequestParam("username") String username, @RequestParam("password") String pwd) {
 
-    @Autowired
-    JwtUtils jwtUtils;
+        String token = getJWTToken(username);
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setUsername(username);
+        utilisateur.setToken(token);
+        return utilisateur;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
-
-    @PostMapping("/connect")
-    public ResponseEntity<?> ConnectUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
     }
 
-    @PostMapping("/logout")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public ResponseEntity<?> signUpUtilisateur(@Valid @RequestBody SignupRequest signUpRequest) {
-        if ((utilisateurRepository.existsByUsername(signUpRequest.getUsername())) &&
-                (utilisateurRepository.existsByPassword(signUpRequest.getPassword()))) {
-            System.out.println("l'utilisateur existe bien");
+    private String getJWTToken(String username) {
+        String secretKey = "mySecretKey";
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+                .commaSeparatedStringToAuthorityList("ROLE_USER");
 
-        }
-        return ResponseEntity.ok().body(new MessageResponse("L'utilisateur s'est déconnecté"));
+        String token = Jwts
+                .builder()
+                .setId("softtekJWT")
+                .setSubject(username)
+                .claim("authorities",
+                        grantedAuthorities.stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 600000))
+                .signWith(SignatureAlgorithm.HS512,
+                        secretKey.getBytes()).compact();
+
+        return "Bearer " + token;
     }
 }

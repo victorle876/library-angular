@@ -39,6 +39,8 @@ public class UtilisateurDTO {
 
     private List<PretDTO> prets;
 
+    private String token;
+
     private Set<RoleDTO> rolesDTO = new HashSet<>();
 }
 
