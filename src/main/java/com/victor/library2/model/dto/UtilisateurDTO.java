@@ -37,7 +37,7 @@ public class UtilisateurDTO {
 
     private Date updatedAt;
 
-    private List<PretDTO> pretsDTO;
+    private List<PretDTO> prets;
 
     private Set<RoleDTO> rolesDTO = new HashSet<>();
 }

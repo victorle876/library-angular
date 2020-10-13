@@ -6,6 +6,8 @@ import com.victor.library2.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -53,12 +55,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/**").permitAll()
-                .antMatchers("/api/**").permitAll()
-                .antMatchers("/").permitAll()
-                .anyRequest().authenticated();
+                .authorizeRequests()
+               .antMatchers("/api/auth/connect/**","/api/auth/logout/**").permitAll()
+                .antMatchers( "/api/utilisateur/list","/api/livre/add/**","/api/utilisateur/add/**","/api/livre/addExemplaire/**").hasRole("ADMIN")
+                .antMatchers("/api/utilisateur/update/**","/api/utilisateur/detail/**","/api/livre/update/**").permitAll()
+                .antMatchers("/api/utilisateur/delete/**","/api/livre/delete/**","/api/exemplaire/delete/**","/api/pret/delete/**").permitAll()
+                .antMatchers("/api/livre/list/**","/api/exemplaire/list/**","/api/pret/list/**","api/exemplaire/addPret/**").permitAll()
+                .antMatchers("/api/livre/detail/**","/api/exemplaire/detail/**").permitAll()
+               .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

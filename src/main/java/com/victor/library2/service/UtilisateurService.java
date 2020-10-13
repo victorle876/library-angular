@@ -1,6 +1,7 @@
 package com.victor.library2.service;
 
 import com.victor.library2.model.dto.UtilisateurDTO;
+import com.victor.library2.model.entity.Livre;
 import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,8 +53,11 @@ public class UtilisateurService {
      */
     public UtilisateurDTO getUserById(Long id)
     {
-        Utilisateur utilisateurId= this.utilisateurRepository.findById(id).get();
-        return mapUtilisateurToUtilisateurDTO(utilisateurId);
+        Optional<Utilisateur> utilisateur= this.utilisateurRepository.findById(id);
+        if (!utilisateur.isPresent()){
+            return null;
+        }
+        return mapUtilisateurToUtilisateurDTO(utilisateur.get());
     }
 
     /**

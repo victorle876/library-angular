@@ -23,7 +23,7 @@ public class PretDTO {
 
     private Date updatedAt;
 
-    private UtilisateurDTO utilisateurDTO;
-    private ExemplaireDTO exemplaireDTO;
+    private UtilisateurDTO utilisateur;
+    private ExemplaireDTO exemplaire;
 
 }

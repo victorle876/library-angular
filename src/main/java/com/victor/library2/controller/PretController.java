@@ -35,7 +35,7 @@ public class PretController {
             throws ResourceNotFoundException {
         PretDTO pretId = pretService.getPretById(id);
         if (pretId == null){
-            new ResourceNotFoundException("Pret not found for this id :: " + pretId);
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(pretId);
     }

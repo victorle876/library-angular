@@ -24,7 +24,7 @@ public class ExemplaireDTO {
 
     private Integer nombre;
 
-    private LivreDTO livreDTO;
+    private LivreDTO livre;
 
     private Date dateParution;
 

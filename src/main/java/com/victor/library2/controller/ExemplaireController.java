@@ -41,7 +41,7 @@ public class ExemplaireController {
             throws ResourceNotFoundException {
         ExemplaireDTO exemplaireId = exemplaireService.getExemplaireById(id);
         if (exemplaireId == null){
-            new ResourceNotFoundException("Exemplaire not found for this id :: " + exemplaireId);
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(exemplaireId);
     }
@@ -51,18 +51,21 @@ public class ExemplaireController {
     @ResponseBody
     public ResponseEntity<PretDTO> createPret(@Valid @RequestBody PretDTO pretDTO, @PathVariable(value = "id") Long exemplaireId) {
         ExemplaireDTO exemplaireDTO = this.exemplaireService.getExemplaireById(exemplaireId);
-        pretDTO.setExemplaireDTO(exemplaireDTO);
+        pretDTO.setExemplaire(exemplaireDTO);
         Pret pret = convertToEntity(pretDTO);
         PretDTO pretSauveDTO = this.pretService.savePret(pret);
         return ResponseEntity.ok().body(pretSauveDTO);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ExemplaireDTO> updateStock(@PathVariable(value = "id") Long stockId,
+    public ResponseEntity<ExemplaireDTO> updateStock(@PathVariable(value = "id") Long exemplaireId,
                                                   @Valid @RequestBody ExemplaireDTO exemplaireDetails) throws ResourceNotFoundException {
+        ExemplaireDTO exemplaireID = this.exemplaireService.getExemplaireById(exemplaireId);
+        LivreDTO livreId = exemplaireID.getLivre();
+        exemplaireDetails.setLivre(livreId);
         Exemplaire exemplaire = convertToEntity(exemplaireDetails);
-        if (stockId == null){
-                 new ResourceNotFoundException("Exemplaire not found for this id :: " + stockId);
+        if (exemplaireId == null){
+                 new ResourceNotFoundException("Exemplaire not found for this id :: " + exemplaireId);
         }
 
         final ExemplaireDTO updatedExemplaire = exemplaireService.saveExemplaire(exemplaire);

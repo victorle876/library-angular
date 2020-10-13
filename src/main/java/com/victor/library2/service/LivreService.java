@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,8 +55,11 @@ public class LivreService {
      */
     public LivreDTO getLivreById(Long id)
     {
-        Livre livreId= this.livreRepository.findById(id).get();
-        return mapLivreToLivreDTO(livreId);
+        Optional<Livre> livre= this.livreRepository.findById(id);
+        if (!livre.isPresent()){
+            return null;
+        }
+        return mapLivreToLivreDTO(livre.get());
 
     }
 

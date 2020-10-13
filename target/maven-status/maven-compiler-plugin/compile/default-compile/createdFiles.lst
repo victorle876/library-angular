@@ -1,8 +1,10 @@
+com/victor/library2/model/dto/RoleDTO.class
 com/victor/library2/model/entity/Role.class
 com/victor/library2/security/jwt/AuthTokenFilter.class
 com/victor/library2/model/entity/ERole.class
 com/victor/library2/payload/request/LoginRequest.class
 com/victor/library2/service/UserDetailsServiceImpl.class
+com/victor/library2/controller/AuthController.class
 com/victor/library2/payload/response/JwtResponse.class
 com/victor/library2/model/dto/LivreDTO.class
 com/victor/library2/controller/ExemplaireController.class

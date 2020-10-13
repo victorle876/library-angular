@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,8 +43,8 @@ public class UtilisateurController {
     @Autowired
     private UtilisateurService utilisateurService;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+/*    @Autowired
+    AuthenticationManager authenticationManager;*/
 
     @Autowired
     RoleRepository roleRepository;
@@ -54,9 +55,10 @@ public class UtilisateurController {
     @Autowired
     PasswordEncoder encoder;
 
-    @Autowired
-    JwtUtils jwtUtils;
+/*    @Autowired
+    JwtUtils jwtUtils;*/
 
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list")
     public ResponseEntity<List<UtilisateurDTO>> getAllUtilisateurs() {
         List<UtilisateurDTO> ListUtilisateursDto = this.utilisateurService.getAllUsers();
@@ -64,16 +66,18 @@ public class UtilisateurController {
     }
 
     @GetMapping("/detail/{id}")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UtilisateurDTO> getUtilisateurById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
         UtilisateurDTO utilisateurId = utilisateurService.getUserById(id);
         if (utilisateurId == null){
-            new ResourceNotFoundException("Utilisateur not found for this id :: " + utilisateurId);
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(utilisateurId);
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<UtilisateurDTO> createUtilisateur(@Valid @RequestBody UtilisateurDTO utilisateurDTO) {
@@ -101,6 +105,7 @@ public class UtilisateurController {
     }
 
     @DeleteMapping("/delete/{id}")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Map<String, Boolean> deleteUtilisateur(@PathVariable(value = "id") Long utilisateurId)
             throws ResourceNotFoundException {
         UtilisateurDTO utilisateur= utilisateurService.getUserById(utilisateurId);
@@ -113,7 +118,7 @@ public class UtilisateurController {
         return response;
     }
 
-    @PostMapping("/connect")
+/*    @PostMapping("/connect")
     public ResponseEntity<?> ConnectUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -144,7 +149,7 @@ public class UtilisateurController {
 
         }
        return ResponseEntity.ok().body(new MessageResponse("L'utilisateur s'est déconnecté"));
-    }
+    }*/
 
 
     private Utilisateur convertToEntity(UtilisateurDTO utilisateurDTO) throws ParseException {

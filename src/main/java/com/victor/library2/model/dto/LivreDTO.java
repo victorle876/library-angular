@@ -24,6 +24,6 @@ public class LivreDTO {
 
     private Date updatedAt;
 
-    private List<ExemplaireDTO> exemplairesDTO;
+    private List<ExemplaireDTO> exemplaires;
 
 }

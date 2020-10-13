@@ -12,6 +12,7 @@
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/repository/PretRepository.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/security/jwt/JwtUtils.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/payload/request/SignupRequest.java
+/Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/dto/RoleDTO.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/entity/Role.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/entity/Pret.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/security/jwt/AuthEntryPointJwt.java
@@ -23,6 +24,7 @@
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/Library2Application.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/exception/GlobalExceptionHandler.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/dto/UtilisateurDTO.java
+/Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/controller/AuthController.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/repository/UserDetailsService.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/payload/response/JwtResponse.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/dto/PretDTO.java

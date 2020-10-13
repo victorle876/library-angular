@@ -2,6 +2,7 @@ package com.victor.library2.service;
 
 import com.victor.library2.model.dto.PretDTO;
 import com.victor.library2.model.entity.Pret;
+import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.repository.PretRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,8 +55,11 @@ public class PretService {
      */
     public PretDTO getPretById(Long id)
     {
-        Pret pretId= this.pretRepository.findById(id).get();
-        return mapPretToPretDTO(pretId);
+        Optional<Pret> pret= this.pretRepository.findById(id);
+        if (!pret.isPresent()){
+            return null;
+        }
+        return mapPretToPretDTO(pret.get());
 
     }
 

@@ -2,6 +2,7 @@ package com.victor.library2.service;
 
 import com.victor.library2.model.dto.ExemplaireDTO;
 import com.victor.library2.model.entity.Exemplaire;
+import com.victor.library2.model.entity.Pret;
 import com.victor.library2.repository.ExemplaireRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,8 +55,11 @@ public class ExemplaireService {
      */
     public ExemplaireDTO getExemplaireById(Long id)
     {
-        Exemplaire exemplaireId= this.exemplaireRepository.findById(id).get();
-        return mapExemplaireToExemplaireDTO(exemplaireId);
+        Optional<Exemplaire> exemplaire= this.exemplaireRepository.findById(id);
+        if (!exemplaire.isPresent()){
+            return null;
+        }
+        return mapExemplaireToExemplaireDTO(exemplaire.get());
 
     }
 
