@@ -48,7 +48,8 @@ public class PretController {
         PretDTO pretDTO = pretService.getPretById(pretId);
         Pret pret = convertToEntity(pretDTO);
         if (pretId == null){
-            new ResourceNotFoundException("Pret not found for this id :: " + pretId);
+            return ResponseEntity.notFound().build();
+        //    new ResourceNotFoundException("Pret not found for this id :: " + pretId);
         }
         final PretDTO updatedPret = pretService.savePret(pret);
         return ResponseEntity.ok(updatedPret);

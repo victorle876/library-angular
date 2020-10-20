@@ -65,7 +65,8 @@ public class ExemplaireController {
         exemplaireDetails.setLivre(livreId);
         Exemplaire exemplaire = convertToEntity(exemplaireDetails);
         if (exemplaireId == null){
-                 new ResourceNotFoundException("Exemplaire not found for this id :: " + exemplaireId);
+             //    new ResourceNotFoundException("Exemplaire not found for this id :: " + exemplaireId);
+            return ResponseEntity.notFound().build();
         }
 
         final ExemplaireDTO updatedExemplaire = exemplaireService.saveExemplaire(exemplaire);

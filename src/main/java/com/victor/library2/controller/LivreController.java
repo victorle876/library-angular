@@ -58,7 +58,6 @@ public class LivreController {
     }
 
     @PostMapping("/addExemplaire/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<ExemplaireDTO> createExemplaire(@Valid @RequestBody ExemplaireDTO exemplaireDTO,@PathVariable(value = "id") Long livreId) {
@@ -70,14 +69,14 @@ public class LivreController {
     }
 
     @PutMapping("/update/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<LivreDTO> updatelivre(@PathVariable(value = "id") Long livreId,
                                                 @RequestBody LivreDTO livreDetails) throws ResourceNotFoundException {
         Livre livre = convertToEntity(livreDetails);
         if (livreId == null){
-                 new ResourceNotFoundException("Livre not found for this id :: " + livreId);
+         //        new ResourceNotFoundException("Livre not found for this id :: " + livreId);
+            return ResponseEntity.notFound().build();
         }
         final LivreDTO updatedLivre = livreService.saveLivre(livre);
         return ResponseEntity.ok(updatedLivre);

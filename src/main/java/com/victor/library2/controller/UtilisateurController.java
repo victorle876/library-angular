@@ -31,7 +31,7 @@ public class UtilisateurController {
 
     @Autowired
     UtilisateurRepository utilisateurRepository;
-
+    
 
     @GetMapping("/list")
     public ResponseEntity<List<UtilisateurDTO>> getAllUtilisateurs() {
@@ -40,7 +40,6 @@ public class UtilisateurController {
     }
 
     @GetMapping("/detail/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UtilisateurDTO> getUtilisateurById(@PathVariable(value = "id") Long id)
             throws ResourceNotFoundException {
         UtilisateurDTO utilisateurId = utilisateurService.getUserById(id);
@@ -51,7 +50,6 @@ public class UtilisateurController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<UtilisateurDTO> createUtilisateur(@Valid @RequestBody UtilisateurDTO utilisateurDTO) {
@@ -72,7 +70,8 @@ public class UtilisateurController {
         System.out.println("utilisateurDTO" + utilisateurDetails);
         Utilisateur utilisateur = convertToEntity(utilisateurDetails);
         if (utilisateurId == null){
-            new ResourceNotFoundException("Employee not found for this id :: " + utilisateurId);
+         //   new ResourceNotFoundException("Employee not found for this id :: " + utilisateurId);
+            return ResponseEntity.notFound().build();
         }
         System.out.println("utilisateur" + utilisateur);
         final UtilisateurDTO updatedUtilisateur = utilisateurService.saveUser(utilisateur);
@@ -80,7 +79,6 @@ public class UtilisateurController {
     }
 
     @DeleteMapping("/delete/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Map<String, Boolean> deleteUtilisateur(@PathVariable(value = "id") Long utilisateurId)
             throws ResourceNotFoundException {
         UtilisateurDTO utilisateur= utilisateurService.getUserById(utilisateurId);
