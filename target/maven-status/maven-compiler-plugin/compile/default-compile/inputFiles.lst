@@ -10,6 +10,7 @@
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/entity/Role.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/entity/Pret.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/controller/LivreController.java
+/Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/service/CustomUserDetailsService.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/dto/LivreDTO.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/model/entity/Exemplaire.java
 /Users/jackrussell/git/library2/library/src/main/java/com/victor/library2/service/ExemplaireService.java

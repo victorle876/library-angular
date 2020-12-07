@@ -1,5 +1,7 @@
 package com.victor.library2.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -52,6 +54,7 @@ public class Exemplaire {
         this.updatedAt = new Date();
     }
 
+  //  @JsonIgnore
     @ManyToOne
     @JoinColumn(name="livre_id", referencedColumnName = "id")
     private Livre livre;

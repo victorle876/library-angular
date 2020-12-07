@@ -1,5 +1,8 @@
 package com.victor.library2.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.victor.library2.model.entity.Pret;
 import lombok.*;
 import javax.persistence.*;
@@ -24,10 +27,12 @@ public class ExemplaireDTO {
 
     private Integer nombre;
 
+    @JsonIgnore
     private LivreDTO livre;
 
     private Date dateParution;
 
     private Pret pret;
+
 
 }

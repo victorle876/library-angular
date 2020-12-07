@@ -1,5 +1,6 @@
 package com.victor.library2.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.victor.library2.model.entity.Utilisateur;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class PretDTO {
 
     private Date updatedAt;
 
+    @JsonIgnore
     private UtilisateurDTO utilisateur;
     private ExemplaireDTO exemplaire;
 

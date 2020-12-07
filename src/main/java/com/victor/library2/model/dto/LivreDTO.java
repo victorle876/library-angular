@@ -1,5 +1,9 @@
 package com.victor.library2.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.victor.library2.model.entity.Exemplaire;
 import com.victor.library2.model.entity.Livre;
 import lombok.*;
@@ -20,10 +24,15 @@ public class LivreDTO {
 
     private String categorie;
 
+    @JsonProperty("createdAt")
     private Date createdAt;
 
+    @JsonProperty("updatedAt")
     private Date updatedAt;
 
+ //   @JsonIgnore
+    @OneToMany(mappedBy="livre")
+    @ToString.Exclude
     private List<ExemplaireDTO> exemplaires;
 
 }

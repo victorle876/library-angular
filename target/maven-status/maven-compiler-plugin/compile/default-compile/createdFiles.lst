@@ -12,6 +12,7 @@ com/victor/library2/repository/UtilisateurRepository.class
 com/victor/library2/config/WebSecurityConfig.class
 com/victor/library2/model/entity/Pret.class
 com/victor/library2/exception/ErrorDetails.class
+com/victor/library2/service/CustomUserDetailsService.class
 com/victor/library2/Library2Application.class
 com/victor/library2/exception/GlobalExceptionHandler.class
 com/victor/library2/model/dto/ExemplaireDTO.class

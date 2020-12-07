@@ -14,6 +14,7 @@ import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,9 +37,16 @@ public class LivreController {
         List<LivreDTO> ListLivresDto = this.livreService.getAllLivres();
         return ResponseEntity.ok().body(ListLivresDto);
     }
+    @GetMapping("/listExemplaireByLivre/{id}")
+    public ResponseEntity<List<ExemplaireDTO>> ExemplaireListByUser(@PathVariable(value = "id") Long id) {
+        LivreDTO livreId = this.livreService.getLivreById(id);
+        Livre livreSelectionne = convertToEntity(livreId);
+        List<ExemplaireDTO> exemplaireList = this.exemplaireService.findExemplaireByLivre(livreId);
+        return ResponseEntity.ok().body(exemplaireList);
+    }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<LivreDTO> getLivreById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<LivreDTO> getLivreById(@PathVariable(value = "id") Long id)throws ResourceNotFoundException {
         LivreDTO livre = livreService.getLivreById(id);
         System.out.println(livre);
         if (livre == null){
@@ -48,13 +56,22 @@ public class LivreController {
     }
 
     @PostMapping("/add")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<LivreDTO> createLivre(@Valid @RequestBody LivreDTO livreDTO) {
         Livre livre = convertToEntity(livreDTO);
         LivreDTO livreSauve = this.livreService.saveLivre(livre);
         return ResponseEntity.ok().body(livreSauve);
+    }
+
+    @PostMapping("/save")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<LivreDTO> saveLivre(@Valid @RequestBody LivreDTO livreDetails)
+    {
+        Livre livre = convertToEntity(livreDetails);
+        final LivreDTO updatedLivre = livreService.saveLivre(livre);
+        return ResponseEntity.ok(updatedLivre);
     }
 
     @PostMapping("/addExemplaire/{id}")
@@ -83,7 +100,6 @@ public class LivreController {
     }
 
     @DeleteMapping("/delete/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Map<String, Boolean> deleteLivre(@PathVariable(value = "id") Long livreId)
             throws ResourceNotFoundException {
         LivreDTO livre = livreService.getLivreById(livreId);

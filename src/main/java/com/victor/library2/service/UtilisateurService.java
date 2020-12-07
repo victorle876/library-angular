@@ -60,6 +60,26 @@ public class UtilisateurService {
         return mapUtilisateurToUtilisateurDTO(utilisateur.get());
     }
 
+    public UtilisateurDTO getUserByUsername(String username)
+    {
+        Optional<Utilisateur> utilisateur= this.utilisateurRepository.findByUsername(username);
+        System.out.println(utilisateur);
+        if (!utilisateur.isPresent()){
+            return null;
+        }
+        return mapUtilisateurToUtilisateurDTO(utilisateur.get());
+    }
+
+    public UtilisateurDTO getUserByUsernameAndPassword(String username, String password)
+    {
+        Optional<Utilisateur> utilisateur= this.utilisateurRepository.findByUsernameAndPassword(username,password);
+        System.out.println(utilisateur);
+        if (!utilisateur.isPresent()){
+            return null;
+        }
+        return mapUtilisateurToUtilisateurDTO(utilisateur.get());
+    }
+
     /**
      * Méthode permet de sauvegarder l'utilisateur via ce service
      *

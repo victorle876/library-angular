@@ -4,8 +4,10 @@ import com.victor.library2.exception.ResourceNotFoundException;
 import com.victor.library2.model.dto.ExemplaireDTO;
 import com.victor.library2.model.dto.LivreDTO;
 import com.victor.library2.model.dto.PretDTO;
+import com.victor.library2.model.dto.UtilisateurDTO;
 import com.victor.library2.model.entity.Exemplaire;
 import com.victor.library2.model.entity.Pret;
+import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.service.ExemplaireService;
 import com.victor.library2.service.PretService;
 import org.modelmapper.ModelMapper;
@@ -55,6 +57,16 @@ public class ExemplaireController {
         Pret pret = convertToEntity(pretDTO);
         PretDTO pretSauveDTO = this.pretService.savePret(pret);
         return ResponseEntity.ok().body(pretSauveDTO);
+    }
+
+    @PostMapping("/save")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<ExemplaireDTO> saveExemplaire(@Valid @RequestBody ExemplaireDTO exemplaireDetails)
+    {
+        Exemplaire exemplaire = convertToEntity(exemplaireDetails);
+        final ExemplaireDTO updatedExemplaire = exemplaireService.saveExemplaire(exemplaire);
+        return ResponseEntity.ok(updatedExemplaire);
     }
 
     @PutMapping("/update/{id}")

@@ -1,6 +1,7 @@
 package com.victor.library2.repository;
 
 import com.victor.library2.model.entity.Exemplaire;
+import com.victor.library2.model.entity.Livre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,8 +12,10 @@ import java.util.List;
 public interface ExemplaireRepository extends JpaRepository<Exemplaire, Long> {
 
     @Query("select e from Exemplaire e inner join Livre l on e.livre.id = l.id where l.titre like %:chaineRecherche%")
-    List<Exemplaire> findByLivre (String chaineRecherche);
+    List<Exemplaire> findExemplaireByLivre (String chaineRecherche);
 
     @Query("select e from Exemplaire e inner join Livre l on e.livre.id = l.id where l.auteur like %:chaineRecherche%")
     List<Exemplaire> findByLivre2 (String chaineRecherche);
+
+    List<Exemplaire> findByLivre (Livre livre1);
 }

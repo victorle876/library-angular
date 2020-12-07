@@ -1,5 +1,6 @@
 package com.victor.library2.controller;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.victor.library2.exception.ResourceNotFoundException;
 import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.model.dto.UtilisateurDTO;
@@ -8,10 +9,12 @@ import com.victor.library2.repository.UtilisateurRepository;
 import com.victor.library2.service.UtilisateurService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +34,14 @@ public class UtilisateurController {
 
     @Autowired
     UtilisateurRepository utilisateurRepository;
+
+/*    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }*/
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
 
     @GetMapping("/list")
@@ -54,8 +65,13 @@ public class UtilisateurController {
     @ResponseBody
     public ResponseEntity<UtilisateurDTO> createUtilisateur(@Valid @RequestBody UtilisateurDTO utilisateurDTO) {
         utilisateurDTO.setRolesDTO(utilisateurDTO.getRolesDTO());
-        utilisateurDTO.setPassword(utilisateurDTO.getPassword());
-        utilisateurDTO.setToken(utilisateurDTO.getToken());
+        System.out.println(utilisateurDTO.getPassword());
+        utilisateurDTO.setPassword(passwordEncoder.encode(utilisateurDTO.getPassword()));
+/*        utilisateurDTO.setUsername(utilisateurDTO.getUsername());
+        utilisateurDTO.setPrenom(utilisateurDTO.getPrenom());
+        utilisateurDTO.setMail(utilisateurDTO.getMail());
+        utilisateurDTO.setStatut(utilisateurDTO.getStatut());
+        utilisateurDTO.setAge(utilisateurDTO.getAge());*/
         Utilisateur utilisateur = convertToEntity(utilisateurDTO);
         UtilisateurDTO utilisateurSauve = this.utilisateurService.saveUser(utilisateur);
         return ResponseEntity.ok().body(utilisateurSauve);
@@ -68,11 +84,35 @@ public class UtilisateurController {
                                               @Valid @RequestBody UtilisateurDTO utilisateurDetails)
                                                  {
         System.out.println("utilisateurDTO" + utilisateurDetails);
+/*        utilisateurDetails.setPassword(passwordEncoder.encode(utilisateurDetails.getPassword()));
+        utilisateurDetails.setUsername(utilisateurDetails.getUsername());
+        utilisateurDetails.setPrenom(utilisateurDetails.getPrenom());
+        utilisateurDetails.setMail(utilisateurDetails.getMail());
+        utilisateurDetails.setStatut(utilisateurDetails.getStatut());
+        utilisateurDetails.setAge(utilisateurDetails.getAge());*/
         Utilisateur utilisateur = convertToEntity(utilisateurDetails);
         if (utilisateurId == null){
          //   new ResourceNotFoundException("Employee not found for this id :: " + utilisateurId);
             return ResponseEntity.notFound().build();
         }
+        System.out.println("utilisateur" + utilisateur);
+        final UtilisateurDTO updatedUtilisateur = utilisateurService.saveUser(utilisateur);
+        return ResponseEntity.ok(updatedUtilisateur);
+    }
+
+    @PostMapping("/save")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<UtilisateurDTO> saveUtilisateur(@Valid @RequestBody UtilisateurDTO utilisateurDetails)
+    {
+        System.out.println("utilisateurDTO" + utilisateurDetails);
+        utilisateurDetails.setPassword(passwordEncoder.encode(utilisateurDetails.getPassword()));
+        utilisateurDetails.setUsername(utilisateurDetails.getUsername());
+        utilisateurDetails.setPrenom(utilisateurDetails.getPrenom());
+        utilisateurDetails.setMail(utilisateurDetails.getMail());
+        utilisateurDetails.setStatut(utilisateurDetails.getStatut());
+        utilisateurDetails.setAge(utilisateurDetails.getAge());
+        Utilisateur utilisateur = convertToEntity(utilisateurDetails);
         System.out.println("utilisateur" + utilisateur);
         final UtilisateurDTO updatedUtilisateur = utilisateurService.saveUser(utilisateur);
         return ResponseEntity.ok(updatedUtilisateur);
@@ -93,6 +133,7 @@ public class UtilisateurController {
 
     private Utilisateur convertToEntity(UtilisateurDTO utilisateurDTO) throws ParseException {
         ModelMapper mapper = new ModelMapper();
+
         Utilisateur utilisateur = mapper.map(utilisateurDTO, Utilisateur.class);
         return utilisateur;
     }

@@ -1,14 +1,18 @@
 package com.victor.library2.service;
 
+import com.victor.library2.model.dto.ExemplaireDTO;
 import com.victor.library2.model.dto.LivreDTO;
+import com.victor.library2.model.entity.Exemplaire;
 import com.victor.library2.model.entity.Livre;
 import com.victor.library2.repository.LivreRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +26,13 @@ public class LivreService {
         LivreDTO livreDTO = mapper.map(livre, LivreDTO.class);
         return livreDTO;
     }
+//    private static ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     LivreRepository livreRepository;
 
+    @Autowired
+    ExemplaireService exemplaireService;
 
     private static final Logger logger = LogManager.getLogger(LivreService.class);
 
@@ -39,9 +46,14 @@ public class LivreService {
         List<Livre> LivreList = livreRepository.findAll();
         logger.debug(LivreList.size());
         if(LivreList.size() > 0) {
+            System.out.println("ici");
+            System.out.println(LivreList.size());
+
             return LivreList.stream()
                     .map(this::mapLivreToLivreDTO)
                     .collect(Collectors.toList());
+
+
         } else {
             return new ArrayList<LivreDTO>();
         }
@@ -59,8 +71,10 @@ public class LivreService {
         if (!livre.isPresent()){
             return null;
         }
-        return mapLivreToLivreDTO(livre.get());
-
+        else
+        {
+            return mapLivreToLivreDTO(livre.get());
+        }
     }
 
     /**

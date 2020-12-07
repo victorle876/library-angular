@@ -1,13 +1,16 @@
 package com.victor.library2.service;
 
 import com.victor.library2.model.dto.ExemplaireDTO;
+import com.victor.library2.model.dto.LivreDTO;
 import com.victor.library2.model.entity.Exemplaire;
+import com.victor.library2.model.entity.Livre;
 import com.victor.library2.model.entity.Pret;
 import com.victor.library2.repository.ExemplaireRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +26,8 @@ public class ExemplaireService {
         ExemplaireDTO exemplaireDTO = mapper.map(exemplaire, ExemplaireDTO.class);
         return exemplaireDTO;
     }
+    @Autowired
+    LivreService livreService;
 
     @Autowired
     ExemplaireRepository exemplaireRepository;
@@ -37,6 +42,20 @@ public class ExemplaireService {
     public List<ExemplaireDTO> getAllExemplaires()
     {
         List<Exemplaire> exemplaireList = exemplaireRepository.findAll();
+        logger.debug(exemplaireList.size());
+        if(exemplaireList.size() > 0) {
+            return exemplaireList.stream()
+                    .map(this::mapExemplaireToExemplaireDTO)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<ExemplaireDTO>();
+        }
+    }
+
+    public List<ExemplaireDTO> findExemplaireByLivre(LivreDTO livre)
+    {
+        Livre livreSelectionne = convertToEntity(livre);
+        List<Exemplaire> exemplaireList = exemplaireRepository.findByLivre(livreSelectionne);
         logger.debug(exemplaireList.size());
         if(exemplaireList.size() > 0) {
             return exemplaireList.stream()
@@ -86,20 +105,11 @@ public class ExemplaireService {
         exemplaireRepository.deleteById(id);
     }
 
-    public List<Exemplaire> findSiteByTitre(String recherche1) {
-        List<Exemplaire>  exemplaireTrouveByTitre = this.exemplaireRepository.findByLivre(recherche1);
-        if (exemplaireTrouveByTitre == null){
-            throw new RuntimeException("Titre introuvable");
-        }
-        return exemplaireTrouveByTitre;
-    }
+    private Livre convertToEntity(LivreDTO livreDTO) throws ParseException {
+        ModelMapper mapper = new ModelMapper();
+        Livre livre = mapper.map(livreDTO, Livre.class);
 
-    public List<Exemplaire> findSiteByAuteur(String recherche1) {
-        List<Exemplaire>  exemplaireTrouveByAuteur = this.exemplaireRepository.findByLivre2(recherche1);
-        if (exemplaireTrouveByAuteur == null){
-            throw new RuntimeException("Auteur introuvable");
-        }
-        return exemplaireTrouveByAuteur;
+        return livre;
     }
 
 }

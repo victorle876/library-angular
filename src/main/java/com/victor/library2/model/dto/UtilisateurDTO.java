@@ -1,5 +1,7 @@
 package com.victor.library2.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.victor.library2.model.entity.Pret;
 import com.victor.library2.model.entity.Role;
 import lombok.*;
