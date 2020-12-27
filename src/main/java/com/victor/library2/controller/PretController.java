@@ -43,16 +43,74 @@ public class PretController {
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<PretDTO> updateUtilisateur(@PathVariable(value = "id") Long pretId,
-                                                @Valid @RequestBody PretDTO pretDetails) throws ResourceNotFoundException {
-        PretDTO pretDTO = pretService.getPretById(pretId);
-        Pret pret = convertToEntity(pretDTO);
-        if (pretId == null){
+    public ResponseEntity<PretDTO> updatePret(@PathVariable(value = "id") Long pretId, @Valid @RequestBody PretDTO pretDetails) throws ResourceNotFoundException {
+         PretDTO pretID = pretService.getPretById(pretId);
+        System.out.print(pretID);
+         ExemplaireDTO exemplaireId = pretID.getExemplaire();
+         pretDetails.setExemplaire(exemplaireId);
+        Pret pret = convertToEntity(pretDetails);
+        if (pretDetails == null){
             return ResponseEntity.notFound().build();
         //    new ResourceNotFoundException("Pret not found for this id :: " + pretId);
         }
         final PretDTO updatedPret = pretService.savePret(pret);
         return ResponseEntity.ok(updatedPret);
+    }
+
+    @PutMapping("/makePretEmprunte/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<PretDTO> makePretEmprunte(@PathVariable(value = "id") Long pretId, @RequestBody PretDTO pretDetails) throws ResourceNotFoundException {
+        System.out.print("pretDetails:" + pretDetails);
+        Pret pret = convertToEntity(pretDetails);
+        if (pretDetails == null){
+            return ResponseEntity.notFound().build();
+        }
+        final PretDTO pretEmprunte = pretService.savePret(pret);
+        System.out.println("pretEmprunte:" + pretEmprunte);
+        return ResponseEntity.ok(pretEmprunte);
+    }
+
+    @PutMapping("/makePretRetourne/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<PretDTO> makePretRetourne(@PathVariable(value = "id") Long pretId,@RequestBody PretDTO pretDetails) throws ResourceNotFoundException {
+        System.out.print(pretDetails);
+        Pret pret = convertToEntity(pretDetails);
+        if (pretDetails == null){
+            return ResponseEntity.notFound().build();
+            //    new ResourceNotFoundException("Pret not found for this id :: " + pretId);
+        }
+        final PretDTO pretRetourne = pretService.savePret(pret);
+        return ResponseEntity.ok(pretRetourne);
+    }
+
+    @PutMapping("/makePretProlonge/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity<PretDTO> makePretProlonge(@PathVariable(value = "id") Long pretId,@RequestBody PretDTO pretDetails) throws ResourceNotFoundException {
+        System.out.print(pretDetails);
+        Pret pret = convertToEntity(pretDetails);
+        if (pret == null){
+            return ResponseEntity.notFound().build();
+            //    new ResourceNotFoundException("Pret not found for this id :: " + pretId);
+        }
+        System.out.print(pretDetails.getNombreProlonge());
+        final PretDTO pretProlonge = pretService.savePret(pret);
+        return ResponseEntity.ok(pretProlonge);
+    }
+
+    @GetMapping("/listPretDispo")
+    public ResponseEntity<List<PretDTO>> getAllPretsDispo() {
+        List<PretDTO> ListPretsDto = this.pretService.getAllPretsDispo();
+        return ResponseEntity.ok().body(ListPretsDto);
+    }
+
+
+    @GetMapping("/listPretRetourneOrProlonge")
+    public ResponseEntity<List<PretDTO>> getAllPretsRetourneOrProlonge() {
+        List<PretDTO> ListPretsDto = this.pretService.getAllPretsRetourneOrProlonge();
+        return ResponseEntity.ok().body(ListPretsDto);
     }
 
     @DeleteMapping("/delete/{id}")

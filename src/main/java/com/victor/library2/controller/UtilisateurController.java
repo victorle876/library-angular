@@ -67,11 +67,6 @@ public class UtilisateurController {
         utilisateurDTO.setRolesDTO(utilisateurDTO.getRolesDTO());
         System.out.println(utilisateurDTO.getPassword());
         utilisateurDTO.setPassword(passwordEncoder.encode(utilisateurDTO.getPassword()));
-/*        utilisateurDTO.setUsername(utilisateurDTO.getUsername());
-        utilisateurDTO.setPrenom(utilisateurDTO.getPrenom());
-        utilisateurDTO.setMail(utilisateurDTO.getMail());
-        utilisateurDTO.setStatut(utilisateurDTO.getStatut());
-        utilisateurDTO.setAge(utilisateurDTO.getAge());*/
         Utilisateur utilisateur = convertToEntity(utilisateurDTO);
         UtilisateurDTO utilisateurSauve = this.utilisateurService.saveUser(utilisateur);
         return ResponseEntity.ok().body(utilisateurSauve);
@@ -84,12 +79,6 @@ public class UtilisateurController {
                                               @Valid @RequestBody UtilisateurDTO utilisateurDetails)
                                                  {
         System.out.println("utilisateurDTO" + utilisateurDetails);
-/*        utilisateurDetails.setPassword(passwordEncoder.encode(utilisateurDetails.getPassword()));
-        utilisateurDetails.setUsername(utilisateurDetails.getUsername());
-        utilisateurDetails.setPrenom(utilisateurDetails.getPrenom());
-        utilisateurDetails.setMail(utilisateurDetails.getMail());
-        utilisateurDetails.setStatut(utilisateurDetails.getStatut());
-        utilisateurDetails.setAge(utilisateurDetails.getAge());*/
         Utilisateur utilisateur = convertToEntity(utilisateurDetails);
         if (utilisateurId == null){
          //   new ResourceNotFoundException("Employee not found for this id :: " + utilisateurId);
@@ -107,11 +96,11 @@ public class UtilisateurController {
     {
         System.out.println("utilisateurDTO" + utilisateurDetails);
         utilisateurDetails.setPassword(passwordEncoder.encode(utilisateurDetails.getPassword()));
-        utilisateurDetails.setUsername(utilisateurDetails.getUsername());
+/*        utilisateurDetails.setUsername(utilisateurDetails.getUsername());
         utilisateurDetails.setPrenom(utilisateurDetails.getPrenom());
         utilisateurDetails.setMail(utilisateurDetails.getMail());
         utilisateurDetails.setStatut(utilisateurDetails.getStatut());
-        utilisateurDetails.setAge(utilisateurDetails.getAge());
+        utilisateurDetails.setAge(utilisateurDetails.getAge());*/
         Utilisateur utilisateur = convertToEntity(utilisateurDetails);
         System.out.println("utilisateur" + utilisateur);
         final UtilisateurDTO updatedUtilisateur = utilisateurService.saveUser(utilisateur);

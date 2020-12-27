@@ -77,9 +77,9 @@ public class LivreController {
     @PostMapping("/addExemplaire/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<ExemplaireDTO> createExemplaire(@Valid @RequestBody ExemplaireDTO exemplaireDTO,@PathVariable(value = "id") Long livreId) {
-        LivreDTO livreDTO = this.livreService.getLivreById(livreId);
-        exemplaireDTO.setLivre(livreDTO);
+    public ResponseEntity<ExemplaireDTO> createExemplaire(@Valid @RequestBody ExemplaireDTO exemplaireDTO,@PathVariable(value = "id") Long id) {
+/*        LivreDTO livreDTO = this.livreService.getLivreById(livreId);
+        exemplaireDTO.setLivre(livreDTO);*/
         Exemplaire exemplaire = convertToEntity(exemplaireDTO);
         ExemplaireDTO exemplaireSauveDTO = this.exemplaireService.saveExemplaire(exemplaire);
         return ResponseEntity.ok().body(exemplaireSauveDTO);
@@ -124,5 +124,12 @@ public class LivreController {
         Exemplaire exemplaire = mapper.map(exemplaireDTO, Exemplaire.class);
 
         return exemplaire;
+    }
+
+    @PostMapping("/searchLivreByAuteurOrTitre")
+    @ResponseBody
+    public ResponseEntity<List<LivreDTO>> searchLivreByAuteurOrTitre(@RequestBody LivreDTO livreRechercheDTO) {
+        List<LivreDTO> ListLivresDto = this.livreService.getAllLivresRechercheParTitreAndParAuteur(livreRechercheDTO.getAuteur(),livreRechercheDTO.getTitre());
+        return ResponseEntity.ok().body(ListLivresDto);
     }
 }

@@ -1,7 +1,6 @@
 package com.victor.library2.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -9,7 +8,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -34,11 +32,12 @@ public class Exemplaire {
 
     private Integer nombre;
 
+    @JsonProperty("createdAt")
     @CreatedDate
     @Column(name = "createdAt")
     private Date createdAt;
 
-
+    @JsonProperty("updatedAt")
     @LastModifiedDate
     @Column(name = "updatedAt")
     private Date updatedAt;
@@ -57,6 +56,7 @@ public class Exemplaire {
   //  @JsonIgnore
     @ManyToOne
     @JoinColumn(name="livre_id", referencedColumnName = "id")
+    @JsonBackReference
     private Livre livre;
 
     private Date dateParution;

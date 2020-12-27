@@ -31,15 +31,9 @@ public class Pret {
 
     private Boolean retourne;
 
+    private Boolean disponible;
+
     private Integer nombreProlonge;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @CreatedDate
     @Column(name = "createdAt")

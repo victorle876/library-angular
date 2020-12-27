@@ -59,6 +59,42 @@ public class LivreService {
         }
     }
 
+    public List<LivreDTO> getAllLivresRechercheParAuteur(String auteur)
+    {
+        List<Livre> LivreList = livreRepository.findByAuteurIsContaining(auteur);
+        logger.debug(LivreList.size());
+        if(LivreList.size() > 0) {
+            System.out.println("ici");
+            System.out.println(LivreList.size());
+
+            return LivreList.stream()
+                    .map(this::mapLivreToLivreDTO)
+                    .collect(Collectors.toList());
+
+
+        } else {
+            return new ArrayList<LivreDTO>();
+        }
+    }
+
+    public List<LivreDTO> getAllLivresRechercheParTitreAndParAuteur(String auteur, String titre)
+    {
+        List<Livre> LivreList = livreRepository.findByTitreIgnoreCaseContainingOrAuteurIsContaining(auteur,titre);
+        logger.debug(LivreList.size());
+        if(LivreList.size() > 0) {
+            System.out.println("ici");
+            System.out.println(LivreList.size());
+
+            return LivreList.stream()
+                    .map(this::mapLivreToLivreDTO)
+                    .collect(Collectors.toList());
+
+
+        } else {
+            return new ArrayList<LivreDTO>();
+        }
+    }
+
     /**
      * Méthode permet de consulter le livre en fonction de l'id via ce service
      *

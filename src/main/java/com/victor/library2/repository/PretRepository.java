@@ -10,6 +10,14 @@ import java.util.List;
 
 @Repository
 public interface PretRepository extends JpaRepository<Pret, Long> {
-    @Query("select p from Pret p inner join Exemplaire e on e.id = p.exemplaire.id where p.emprunte = true")
-    List<Pret> findByExemplaire (String chaineRecherche);
+
+    List<Pret> findByEmprunteTrueOrRetourneTrueOrProlongeTrue();
+
+    List<Pret> findByDisponibleTrue();
+
+    List<Pret> findByProlongeTrue();
+
+    @Query("select p from Pret p inner join Exemplaire e on e.id = p.exemplaire.id where e.livre.titre = :chaineRecherchee and disponible ='true' ")
+    List<Pret> findByTitre(String chaineRecherchee);
+
 }

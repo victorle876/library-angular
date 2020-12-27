@@ -48,11 +48,27 @@ public class ExemplaireController {
         return ResponseEntity.ok().body(exemplaireId);
     }
 
-    @PostMapping("/addPret/{id}")
+/*    @PostMapping("/addPret/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<PretDTO> createPret(@Valid @RequestBody PretDTO pretDTO, @PathVariable(value = "id") Long exemplaireId) {
         ExemplaireDTO exemplaireDTO = this.exemplaireService.getExemplaireById(exemplaireId);
+        pretDTO.setExemplaire(exemplaireDTO);
+        pretDTO.setDisponible(Boolean.FALSE);
+        pretDTO.setEmprunte(Boolean.FALSE);
+        Pret pret = convertToEntity(pretDTO);
+        PretDTO pretSauveDTO = this.pretService.savePret(pret);
+        return ResponseEntity.ok().body(pretSauveDTO);
+    }*/
+
+    @PostMapping("/addPretDispo/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity<PretDTO> addPretDispo(@Valid @RequestBody PretDTO pretDTO, @PathVariable(value = "id") Long exemplaireId) {
+        ExemplaireDTO exemplaireDTO = this.exemplaireService.getExemplaireById(exemplaireId);
+/*        pretDTO.setExemplaire(exemplaireDTO);
+        pretDTO.setDisponible(Boolean.TRUE);
+        pretDTO.setEmprunte(Boolean.FALSE);*/
         pretDTO.setExemplaire(exemplaireDTO);
         Pret pret = convertToEntity(pretDTO);
         PretDTO pretSauveDTO = this.pretService.savePret(pret);
@@ -71,7 +87,7 @@ public class ExemplaireController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<ExemplaireDTO> updateStock(@PathVariable(value = "id") Long exemplaireId,
-                                                  @Valid @RequestBody ExemplaireDTO exemplaireDetails) throws ResourceNotFoundException {
+                                                   @RequestBody ExemplaireDTO exemplaireDetails) throws ResourceNotFoundException {
         ExemplaireDTO exemplaireID = this.exemplaireService.getExemplaireById(exemplaireId);
         LivreDTO livreId = exemplaireID.getLivre();
         exemplaireDetails.setLivre(livreId);
@@ -97,6 +113,7 @@ public class ExemplaireController {
         response.put("deleted", Boolean.TRUE);
         return response;
     }
+
 
     private Exemplaire convertToEntity(ExemplaireDTO exemplaireDTO) throws ParseException {
         ModelMapper mapper = new ModelMapper();

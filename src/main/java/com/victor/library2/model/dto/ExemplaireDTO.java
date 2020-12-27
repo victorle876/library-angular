@@ -1,8 +1,7 @@
 package com.victor.library2.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.victor.library2.model.entity.Pret;
 import lombok.*;
 import javax.persistence.*;
@@ -21,18 +20,19 @@ public class ExemplaireDTO {
 
     private String isbn;
 
+    @JsonProperty("createdAt")
     private Date createdAt;
 
+    @JsonProperty("updatedAt")
     private Date updatedAt;
 
     private Integer nombre;
 
-    @JsonIgnore
+    @JsonBackReference
     private LivreDTO livre;
 
     private Date dateParution;
 
     private Pret pret;
-
 
 }

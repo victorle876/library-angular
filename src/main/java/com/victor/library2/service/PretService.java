@@ -47,6 +47,45 @@ public class PretService {
         }
     }
 
+    public List<PretDTO> getAllPretsDispo()
+    {
+        List<Pret> pretListDispo = pretRepository.findByDisponibleTrue();
+        logger.debug(pretListDispo.size());
+        if(pretListDispo.size() > 0) {
+            return pretListDispo.stream()
+                    .map(this::mapPretToPretDTO)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<PretDTO>();
+        }
+    }
+
+    public List<PretDTO> getAllPretsRetourneOrProlonge()
+    {
+        List<Pret> pretListRetourneOrProlonge = pretRepository.findByEmprunteTrueOrRetourneTrueOrProlongeTrue();
+        logger.debug(pretListRetourneOrProlonge.size());
+        if(pretListRetourneOrProlonge.size() > 0) {
+            return pretListRetourneOrProlonge.stream()
+                    .map(this::mapPretToPretDTO)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<PretDTO>();
+        }
+    }
+
+    public List<PretDTO> getAllPretsRecherchees(String chaineRecherchee)
+    {
+        List<Pret> pretListRecherchees = pretRepository.findByTitre(chaineRecherchee);
+        logger.debug(pretListRecherchees.size());
+        if(pretListRecherchees.size() > 0) {
+            return pretListRecherchees.stream()
+                    .map(this::mapPretToPretDTO)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<PretDTO>();
+        }
+    }
+
     /**
      * Méthode permet de consulter le Stock en fonction de l'id via ce service
      *

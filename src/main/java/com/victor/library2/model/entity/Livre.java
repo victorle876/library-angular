@@ -1,8 +1,6 @@
 package com.victor.library2.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -29,19 +27,21 @@ public class Livre {
     @NotBlank
     private String categorie;
 
+    @JsonProperty("createdAt")
     @CreatedDate
     @Column(name = "createdAt")
     private Date createdAt;
 
+    @JsonProperty("updatedAt")
     @LastModifiedDate
     @Column(name = "updatedAt")
     private Date updatedAt;
 
-    //private Date dateParution;
 
     //@JsonIgnore
     @OneToMany(mappedBy="livre")
     @ToString.Exclude
+    @JsonManagedReference
     private List<Exemplaire> exemplaires;
 
     @PrePersist

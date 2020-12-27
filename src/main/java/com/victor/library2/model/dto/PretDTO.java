@@ -24,7 +24,9 @@ public class PretDTO {
 
     private Date updatedAt;
 
-    @JsonIgnore
+    private Boolean disponible;
+
+ //   @JsonIgnore
     private UtilisateurDTO utilisateur;
     private ExemplaireDTO exemplaire;
 
