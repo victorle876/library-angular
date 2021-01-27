@@ -1,5 +1,6 @@
 package com.victor.library2.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.victor.library2.model.entity.Utilisateur;
 import lombok.*;
@@ -7,7 +8,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
+//@Data
+@Getter
+@Setter
 public class PretDTO {
 
     private Long id;
@@ -26,8 +29,12 @@ public class PretDTO {
 
     private Boolean disponible;
 
- //   @JsonIgnore
+//    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonBackReference
     private UtilisateurDTO utilisateur;
+
     private ExemplaireDTO exemplaire;
 
 }

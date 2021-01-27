@@ -53,7 +53,8 @@ public class Exemplaire {
         this.updatedAt = new Date();
     }
 
-  //  @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name="livre_id", referencedColumnName = "id")
     @JsonBackReference

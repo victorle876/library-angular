@@ -1,5 +1,6 @@
 package com.victor.library2.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,7 +10,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 @Table(name = "Pret")
 public class Pret {
 
@@ -21,8 +24,11 @@ public class Pret {
     @JoinColumn(name = "exemplaire_id", referencedColumnName = "id")
     private Exemplaire exemplaire;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name="utilisateur_id", referencedColumnName = "id")
+    @JsonBackReference
     private Utilisateur utilisateur;
 
     private Boolean emprunte;

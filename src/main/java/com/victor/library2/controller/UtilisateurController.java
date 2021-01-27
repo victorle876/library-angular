@@ -35,13 +35,13 @@ public class UtilisateurController {
     @Autowired
     UtilisateurRepository utilisateurRepository;
 
-/*    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }*/
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Bean
+    public PasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     
 
     @GetMapping("/list")
@@ -64,7 +64,7 @@ public class UtilisateurController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<UtilisateurDTO> createUtilisateur(@Valid @RequestBody UtilisateurDTO utilisateurDTO) {
-        utilisateurDTO.setRolesDTO(utilisateurDTO.getRolesDTO());
+      //  utilisateurDTO.setRolesDTO(utilisateurDTO.getRolesDTO());
         System.out.println(utilisateurDTO.getPassword());
         utilisateurDTO.setPassword(passwordEncoder.encode(utilisateurDTO.getPassword()));
         Utilisateur utilisateur = convertToEntity(utilisateurDTO);
@@ -79,6 +79,7 @@ public class UtilisateurController {
                                               @Valid @RequestBody UtilisateurDTO utilisateurDetails)
                                                  {
         System.out.println("utilisateurDTO" + utilisateurDetails);
+        utilisateurDetails.setPassword(passwordEncoder.encode(utilisateurDetails.getPassword()));
         Utilisateur utilisateur = convertToEntity(utilisateurDetails);
         if (utilisateurId == null){
          //   new ResourceNotFoundException("Employee not found for this id :: " + utilisateurId);

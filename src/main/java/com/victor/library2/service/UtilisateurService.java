@@ -70,6 +70,22 @@ public class UtilisateurService {
         return mapUtilisateurToUtilisateurDTO(utilisateur.get());
     }
 
+    public UtilisateurDTO getUserByMail(String mail)
+    {
+        Optional<Utilisateur> utilisateur= this.utilisateurRepository.findByMail(mail);
+        System.out.println(utilisateur);
+        if (!utilisateur.isPresent()){
+            return null;
+        }
+        return mapUtilisateurToUtilisateurDTO(utilisateur.get());
+    }
+
+    public UtilisateurDTO getUtilisateurConnected (){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String emailUtilisateur = authentication.getName();
+        return mapUtilisateurToUtilisateurDTO(this.utilisateurRepository.findByMail(emailUtilisateur).get());
+    }
+
     public UtilisateurDTO getUserByUsernameAndPassword(String username, String password)
     {
         Optional<Utilisateur> utilisateur= this.utilisateurRepository.findByUsernameAndPassword(username,password);
@@ -100,18 +116,6 @@ public class UtilisateurService {
     public void deleteUserById(Long id)
     {
         utilisateurRepository.deleteById(id);
-    }
-
-    /**
-     * Méthode permet de vérifier l'existence lors de la connexion via ce service
-     *
-     * @return l'utilisateur
-     */
-    public UtilisateurDTO getUtilisateurConnected (){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String emailUtilisateur = authentication.getName();
-        Utilisateur utilisateurConnecte = this.utilisateurRepository.findByMail(emailUtilisateur).get();
-        return mapUtilisateurToUtilisateurDTO(utilisateurConnecte);
     }
 
 }

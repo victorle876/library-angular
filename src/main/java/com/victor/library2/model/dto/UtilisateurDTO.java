@@ -1,6 +1,7 @@
 package com.victor.library2.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.victor.library2.model.entity.Pret;
 import com.victor.library2.model.entity.Role;
@@ -14,11 +15,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//@Data
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+//@ToString
 public class UtilisateurDTO {
 
     private Long id;
@@ -39,11 +39,22 @@ public class UtilisateurDTO {
 
     private Date updatedAt;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy="utilisateur")
+    @JsonManagedReference
     private List<PretDTO> prets;
 
     private String token;
 
-    private Set<RoleDTO> rolesDTO = new HashSet<>();
+/*   @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<RoleDTO> rolesDTO = new HashSet<>();*/
 }
 
 

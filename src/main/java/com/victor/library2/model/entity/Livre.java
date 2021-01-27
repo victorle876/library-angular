@@ -38,9 +38,9 @@ public class Livre {
     private Date updatedAt;
 
 
-    //@JsonIgnore
-    @OneToMany(mappedBy="livre")
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy="livre")
     @JsonManagedReference
     private List<Exemplaire> exemplaires;
 
@@ -54,6 +54,5 @@ public class Livre {
     protected void preUpdate() {
         this.updatedAt = new Date();
     }
-
 
 }

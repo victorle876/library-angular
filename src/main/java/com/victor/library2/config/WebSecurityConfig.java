@@ -1,7 +1,9 @@
 package com.victor.library2.config;
 
-import com.victor.library2.security.jwt.JWTAuthorizationFilter;
+import com.victor.library2.security.jwt.JwtAuthenticationTokenFilter;
+import com.victor.library2.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,8 +13,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -23,38 +27,48 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService customUserDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(customUserDetailsService)
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder
+                .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.csrf().disable()
-                    .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                    .authorizeRequests()
-                    .antMatchers( "/api/**").permitAll()
-/*                    .antMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/auth/login/**").permitAll()*/
- //                   .antMatchers(HttpMethod.GET, "/api/auth/livre/list**").permitAll()
-                    .anyRequest().authenticated()
-                    .and().logout().logoutSuccessUrl("/api/auth/login");
-        }
+    @Bean
+    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() {
+        return new JwtAuthenticationTokenFilter();
+    }
 
-    @Bean(name = "authenticationManager")
+    @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+            http.csrf().disable();
+            http
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers( "/api/exemplaire/**").permitAll()
+                    .antMatchers( "/api/livre/**").permitAll()
+                    .antMatchers( "/api/pret/**").permitAll()
+                    .antMatchers( "/api/utilisateur/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
+                    .anyRequest().authenticated();
+
+            http
+                    .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        }
 
 
 }

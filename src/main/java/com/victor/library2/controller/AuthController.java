@@ -1,29 +1,35 @@
 package com.victor.library2.controller;
 
+import antlr.BaseAST;
+import com.victor.library2.exception.ResourceNotFoundException;
+import com.victor.library2.model.dto.ExemplaireDTO;
 import com.victor.library2.model.dto.UtilisateurDTO;
+import com.victor.library2.model.entity.AuthenticationRequest;
+import com.victor.library2.model.entity.JwtTokens;
+import com.victor.library2.model.entity.RefreshRequest;
 import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.repository.UtilisateurRepository;
+import com.victor.library2.service.JwtTokenService;
 import com.victor.library2.service.UtilisateurService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -33,57 +39,60 @@ public class AuthController {
     private UtilisateurService utilisateurService;
 
     @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    private AuthenticationManager authenticationManager;
+
+ //   private PasswordEncoder passwordEncoder;
+
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private JwtTokenService jwtTokenService;
 
-    @PostMapping("/login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String pwd) {
-        UtilisateurDTO utilisateurExistant = this.utilisateurService.getUserByUsername(username);
-        if (utilisateurExistant == null) {
-            System.out.println("utilisateur non existant");
+
+    @PostMapping(value = "/login")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResponseEntity authenticate(@RequestBody UtilisateurDTO utilisateurDTO, AuthenticationRequest authenticationRequest) {
+
+        System.out.println("utilisateurDTO:" + utilisateurDTO);
+        System.out.println("mail:" + utilisateurDTO.getMail());
+        System.out.println("pwd:" + utilisateurDTO.getPassword());
+        UtilisateurDTO utilisateurExistant = this.utilisateurService.getUserByMail(utilisateurDTO.getMail());
+        if (utilisateurExistant != null) {
+            System.out.println("utilisateurExistant:" + utilisateurExistant);
+            authenticationRequest.username = utilisateurExistant.getUsername();
+            System.out.println("authenticationRequest.username:" + authenticationRequest.username);
+            authenticationRequest.password = passwordEncoder.encode(utilisateurExistant.getPassword());
+            System.out.println("authenticationRequest.password:" + authenticationRequest.password);
         }
-        String token = getJWTToken(username);
-        System.out.println(username);
-        System.out.println(pwd);
-        System.out.println(passwordEncoder.matches(pwd, utilisateurExistant.getPassword()));
-        System.out.println(utilisateurExistant);
-        if (passwordEncoder.matches(pwd, utilisateurExistant.getPassword()) == true) {
-            Utilisateur utilisateur = convertToEntity(utilisateurExistant);
-            System.out.println(token);
-            utilisateur.setUsername(username);
-            utilisateur.setToken(token);
+
+        //$2a$10$T0sv9bnVdj6jDhTvtQbyYeiQORlJtlR/RA2eli8POjD8zdL25GCyO
+        //$2a$10$T0sv9bnVdj6jDhTvtQbyYeiQORlJtlR/RA2eli8POjD8zdL25GCyO
+
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationRequest.username, authenticationRequest.password);
+        System.out.println("usernamePasswordAuthenticationToken:" + usernamePasswordAuthenticationToken);
+        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        System.out.println("authentication:" + authentication);
+        if (authentication != null && authentication.isAuthenticated() && utilisateurExistant != null) {
+                System.out.println("ici4");
+                if (passwordEncoder.matches(utilisateurDTO.getPassword(), utilisateurExistant.getPassword()) == true) {
+                    JwtTokens tokens = jwtTokenService.createTokens(authentication);
+                    System.out.println(tokens);
+                    return ResponseEntity.ok().body(tokens);
+            }
         }
-        return token;
+        System.out.println("ici5");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }
 
-    private String getJWTToken(String username) {
-        String secretKey = "mySecretKey";
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
-
-        String token = Jwts
-                .builder()
-                .setId("softtekJWT")
-                .setSubject(username)
-                .claim("authorities",
-                        grantedAuthorities.stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .collect(Collectors.toList()))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
-                .signWith(SignatureAlgorithm.HS512,
-                        secretKey.getBytes()).compact();
-
-        System.out.println(token);
-
-        return "Bearer " + token;
-    }
-
-    @PostMapping("/logout")
-    private boolean logout(@RequestParam("username") String username) {
-        Boolean utilisateurConnecte = this.utilisateurRepository.existsByUsername(username);
-        return true;
+    @PostMapping(value = "/logout")
+    public ResponseEntity refreshToken(@RequestBody RefreshRequest refreshRequest) {
+        try {
+            JwtTokens tokens = jwtTokenService.refreshJwtToken(refreshRequest.refreshToken);
+            return ResponseEntity.ok().body(tokens);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        }
     }
 
     private Utilisateur convertToEntity(UtilisateurDTO utilisateurDTO) throws ParseException {

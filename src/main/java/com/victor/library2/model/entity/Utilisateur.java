@@ -1,5 +1,6 @@
 package com.victor.library2.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -11,7 +12,10 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
+//@ToString
 @Table(name = "Utilisateurs")
 public class Utilisateur {
 
@@ -40,7 +44,10 @@ public class Utilisateur {
     @Column(name = "updatedAt")
     private Date updatedAt;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy="utilisateur")
+    @JsonManagedReference
     private List<Pret> prets;
 
     private String token;
@@ -56,27 +63,15 @@ public class Utilisateur {
         this.updatedAt = new Date();
     }
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+/*   @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "user_role",
             joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
-    private Set<Role> roles = new HashSet<>();;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Role> roles = new HashSet<>();*/
 
-    @Override
-    public String toString() {
-        return "Utilisateur{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", mail='" + mail + '\'' +
-                ", password='" + password + '\'' +
-                ", age=" + age +
-                ", statut='" + statut + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }
 
 

@@ -7,7 +7,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
+//@Data
+@Getter
+@Setter
 public class ExemplaireDTO {
 
     private Long id;
@@ -28,6 +30,8 @@ public class ExemplaireDTO {
 
     private Integer nombre;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @JsonBackReference
     private LivreDTO livre;
 
