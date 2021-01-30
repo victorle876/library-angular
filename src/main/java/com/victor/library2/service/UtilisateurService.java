@@ -83,6 +83,7 @@ public class UtilisateurService {
     public UtilisateurDTO getUtilisateurConnected (){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailUtilisateur = authentication.getName();
+        System.out.println("mail connecte: " + emailUtilisateur);
         return mapUtilisateurToUtilisateurDTO(this.utilisateurRepository.findByMail(emailUtilisateur).get());
     }
 

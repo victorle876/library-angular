@@ -4,9 +4,8 @@ import com.victor.library2.model.dto.UserDto;
 import com.victor.library2.model.entity.JwtTokens;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.DefaultClaims;
-import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,10 +18,11 @@ import java.util.Calendar;
 public class JwtTokenService {
     private static final String USER_SECRET = "userSecret";
 
-    private String secret;
-
     @Autowired
     private UserDetailsServiceImpl userService;
+
+    @Value("${token.secret}")
+    private String secret;
 
     public JwtTokens createTokens(Authentication authentication) {
 
@@ -30,10 +30,11 @@ public class JwtTokenService {
         String refreshToken;
 
         UserDto user = (UserDto) authentication.getPrincipal();
-
+        System.out.println("user test:  " + user);
         token = createToken(user);
+        System.out.println("token cree:  " + token);
         refreshToken = createRefreshToken(user);
-
+        System.out.println("token refresh:  " + refreshToken);
         return new JwtTokens(token, refreshToken);
     }
 
@@ -82,6 +83,7 @@ public class JwtTokenService {
         Jws<Claims> claims = parser.parseClaimsJws(token);
 
         UserDto user = (UserDto) userService.loadUserByUsername(claims.getBody().getSubject());
+        System.out.println("token refresh2:  " + token);
 
         return parser.require(USER_SECRET, user.getUserSecret()).parseClaimsJws(token);
     }

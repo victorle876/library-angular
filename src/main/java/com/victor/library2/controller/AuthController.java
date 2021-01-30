@@ -48,21 +48,23 @@ public class AuthController {
     @Autowired
     private JwtTokenService jwtTokenService;
 
-
     @PostMapping(value = "/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity authenticate(@RequestBody UtilisateurDTO utilisateurDTO, AuthenticationRequest authenticationRequest) {
+    public ResponseEntity authenticate(@RequestBody UtilisateurDTO utilisateurDTO) {
 
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         System.out.println("utilisateurDTO:" + utilisateurDTO);
         System.out.println("mail:" + utilisateurDTO.getMail());
         System.out.println("pwd:" + utilisateurDTO.getPassword());
+/*        UtilisateurDTO utilisateurId = this.utilisateurService.getUtilisateurConnected();
+        System.out.println("user connected:" + utilisateurId );*/
         UtilisateurDTO utilisateurExistant = this.utilisateurService.getUserByMail(utilisateurDTO.getMail());
         if (utilisateurExistant != null) {
             System.out.println("utilisateurExistant:" + utilisateurExistant);
             authenticationRequest.username = utilisateurExistant.getUsername();
             System.out.println("authenticationRequest.username:" + authenticationRequest.username);
-            authenticationRequest.password = passwordEncoder.encode(utilisateurExistant.getPassword());
+            authenticationRequest.password = utilisateurDTO.getPassword();
             System.out.println("authenticationRequest.password:" + authenticationRequest.password);
         }
 
@@ -77,7 +79,7 @@ public class AuthController {
                 System.out.println("ici4");
                 if (passwordEncoder.matches(utilisateurDTO.getPassword(), utilisateurExistant.getPassword()) == true) {
                     JwtTokens tokens = jwtTokenService.createTokens(authentication);
-                    System.out.println(tokens);
+                    System.out.println("tokens: " + tokens);
                     return ResponseEntity.ok().body(tokens);
             }
         }

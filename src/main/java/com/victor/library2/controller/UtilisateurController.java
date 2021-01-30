@@ -97,11 +97,6 @@ public class UtilisateurController {
     {
         System.out.println("utilisateurDTO" + utilisateurDetails);
         utilisateurDetails.setPassword(passwordEncoder.encode(utilisateurDetails.getPassword()));
-/*        utilisateurDetails.setUsername(utilisateurDetails.getUsername());
-        utilisateurDetails.setPrenom(utilisateurDetails.getPrenom());
-        utilisateurDetails.setMail(utilisateurDetails.getMail());
-        utilisateurDetails.setStatut(utilisateurDetails.getStatut());
-        utilisateurDetails.setAge(utilisateurDetails.getAge());*/
         Utilisateur utilisateur = convertToEntity(utilisateurDetails);
         System.out.println("utilisateur" + utilisateur);
         final UtilisateurDTO updatedUtilisateur = utilisateurService.saveUser(utilisateur);
