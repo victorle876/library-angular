@@ -30,6 +30,7 @@ public class ExemplaireDTO {
 
     private Integer nombre;
 
+    @JoinColumn(name="livre_id", referencedColumnName = "id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonBackReference

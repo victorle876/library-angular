@@ -4,6 +4,8 @@ import com.victor.library2.model.dto.UtilisateurDTO;
 import com.victor.library2.model.entity.Livre;
 import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.repository.UtilisateurRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UtilisateurService {
+
+    private static final Logger logger = LogManager.getLogger(UtilisateurService.class);
 
     private UtilisateurDTO mapUtilisateurToUtilisateurDTO(Utilisateur utilisateur) {
         ModelMapper mapper = new ModelMapper();
@@ -63,7 +67,7 @@ public class UtilisateurService {
     public UtilisateurDTO getUserByUsername(String username)
     {
         Optional<Utilisateur> utilisateur= this.utilisateurRepository.findByUsername(username);
-        System.out.println(utilisateur);
+        logger.info(utilisateur);
         if (!utilisateur.isPresent()){
             return null;
         }
@@ -73,7 +77,7 @@ public class UtilisateurService {
     public UtilisateurDTO getUserByMail(String mail)
     {
         Optional<Utilisateur> utilisateur= this.utilisateurRepository.findByMail(mail);
-        System.out.println(utilisateur);
+        logger.info(utilisateur);
         if (!utilisateur.isPresent()){
             return null;
         }
@@ -83,14 +87,14 @@ public class UtilisateurService {
     public UtilisateurDTO getUtilisateurConnected (){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String emailUtilisateur = authentication.getName();
-        System.out.println("mail connecte: " + emailUtilisateur);
+        logger.info("mail connecte: " + emailUtilisateur);
         return mapUtilisateurToUtilisateurDTO(this.utilisateurRepository.findByMail(emailUtilisateur).get());
     }
 
     public UtilisateurDTO getUserByUsernameAndPassword(String username, String password)
     {
         Optional<Utilisateur> utilisateur= this.utilisateurRepository.findByUsernameAndPassword(username,password);
-        System.out.println(utilisateur);
+        logger.info(utilisateur);
         if (!utilisateur.isPresent()){
             return null;
         }

@@ -7,6 +7,8 @@ import com.victor.library2.model.dto.UtilisateurDTO;
 import com.victor.library2.repository.RoleRepository;
 import com.victor.library2.repository.UtilisateurRepository;
 import com.victor.library2.service.UtilisateurService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +36,8 @@ public class UtilisateurController {
 
     @Autowired
     UtilisateurRepository utilisateurRepository;
+
+    private static final Logger logger = LogManager.getLogger(UtilisateurController.class);
 
     @Autowired
     private PasswordEncoder passwordEncoder;

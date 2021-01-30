@@ -8,6 +8,8 @@ import com.victor.library2.model.entity.Livre;
 import com.victor.library2.model.dto.LivreDTO;
 import com.victor.library2.service.ExemplaireService;
 import com.victor.library2.service.LivreService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
@@ -31,6 +33,8 @@ public class LivreController {
 
     @Autowired
     private ExemplaireService exemplaireService;
+
+    private static final Logger logger = LogManager.getLogger(LivreController.class);
 
     @GetMapping("/list")
     public ResponseEntity<List<LivreDTO>> getAllLivres() {
@@ -78,8 +82,6 @@ public class LivreController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<ExemplaireDTO> createExemplaire(@Valid @RequestBody ExemplaireDTO exemplaireDTO,@PathVariable(value = "id") Long id) {
-/*        LivreDTO livreDTO = this.livreService.getLivreById(livreId);
-        exemplaireDTO.setLivre(livreDTO);*/
         Exemplaire exemplaire = convertToEntity(exemplaireDTO);
         ExemplaireDTO exemplaireSauveDTO = this.exemplaireService.saveExemplaire(exemplaire);
         return ResponseEntity.ok().body(exemplaireSauveDTO);

@@ -5,6 +5,8 @@ import com.victor.library2.model.dto.ExemplaireDTO;
 import com.victor.library2.model.entity.Pret;
 import com.victor.library2.model.dto.PretDTO;
 import com.victor.library2.service.PretService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
@@ -24,6 +26,8 @@ public class PretController {
     @Autowired
     private PretService pretService;
 
+    private static final Logger logger = LogManager.getLogger(PretController.class);
+    
     @GetMapping("/list")
     public ResponseEntity<List<PretDTO>> getAllPrets() {
         List<PretDTO> ListPretsDto = this.pretService.getAllPrets();
@@ -67,7 +71,7 @@ public class PretController {
             return ResponseEntity.notFound().build();
         }
         final PretDTO pretEmprunte = pretService.savePret(pret);
-        System.out.println("pretEmprunte:" + pretEmprunte);
+        logger.info("pretEmprunte:" + pretEmprunte);
         return ResponseEntity.ok(pretEmprunte);
     }
 

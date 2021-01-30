@@ -1,8 +1,11 @@
 package com.victor.library2.service;
 
+import com.victor.library2.controller.AuthController;
 import com.victor.library2.model.entity.AuthenticationRequest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,11 +19,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    private static final Logger logger = LogManager.getLogger(AuthenticationServiceImpl.class);
+
     @Override
     public Authentication authenticate(AuthenticationRequest authenticationRequest) {
-        System.out.println("authenticationRequest :" +authenticationRequest);
+        logger.info("authenticationRequest :" +authenticationRequest);
         UsernamePasswordAuthenticationToken usernameAuthentication = new UsernamePasswordAuthenticationToken(authenticationRequest.username, authenticationRequest.password);
-        System.out.println("usernameAuthentication :" +usernameAuthentication);
+        logger.info("usernameAuthentication :" +usernameAuthentication);
         return authenticationManager.authenticate(usernameAuthentication);
     }
 

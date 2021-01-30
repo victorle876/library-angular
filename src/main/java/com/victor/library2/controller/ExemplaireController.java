@@ -10,6 +10,8 @@ import com.victor.library2.model.entity.Pret;
 import com.victor.library2.model.entity.Utilisateur;
 import com.victor.library2.service.ExemplaireService;
 import com.victor.library2.service.PretService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ParseException;
@@ -32,6 +34,8 @@ public class ExemplaireController {
     @Autowired
     private PretService pretService;
 
+    private static final Logger logger = LogManager.getLogger(ExemplaireController.class);
+
     @GetMapping("/list")
     public ResponseEntity<List<ExemplaireDTO>> getAllExemplaires() {
         List<ExemplaireDTO> ListExemplairesDto = this.exemplaireService.getAllExemplaires();
@@ -48,27 +52,11 @@ public class ExemplaireController {
         return ResponseEntity.ok().body(exemplaireId);
     }
 
-/*    @PostMapping("/addPret/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public ResponseEntity<PretDTO> createPret(@Valid @RequestBody PretDTO pretDTO, @PathVariable(value = "id") Long exemplaireId) {
-        ExemplaireDTO exemplaireDTO = this.exemplaireService.getExemplaireById(exemplaireId);
-        pretDTO.setExemplaire(exemplaireDTO);
-        pretDTO.setDisponible(Boolean.FALSE);
-        pretDTO.setEmprunte(Boolean.FALSE);
-        Pret pret = convertToEntity(pretDTO);
-        PretDTO pretSauveDTO = this.pretService.savePret(pret);
-        return ResponseEntity.ok().body(pretSauveDTO);
-    }*/
-
     @PostMapping("/addPretDispo/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<PretDTO> addPretDispo(@Valid @RequestBody PretDTO pretDTO, @PathVariable(value = "id") Long exemplaireId) {
         ExemplaireDTO exemplaireDTO = this.exemplaireService.getExemplaireById(exemplaireId);
-/*        pretDTO.setExemplaire(exemplaireDTO);
-        pretDTO.setDisponible(Boolean.TRUE);
-        pretDTO.setEmprunte(Boolean.FALSE);*/
         pretDTO.setExemplaire(exemplaireDTO);
         Pret pret = convertToEntity(pretDTO);
         PretDTO pretSauveDTO = this.pretService.savePret(pret);

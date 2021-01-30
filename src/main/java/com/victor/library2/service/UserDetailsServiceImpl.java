@@ -3,6 +3,8 @@ package com.victor.library2.service;
 import com.victor.library2.model.dto.UserDto;
 import com.victor.library2.model.dto.UtilisateurDTO;
 import com.victor.library2.repository.UtilisateurRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,15 +20,17 @@ import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private static final Logger logger = LogManager.getLogger(UserDetailsServiceImpl.class);
+
     @Autowired
     UtilisateurService utilisateurService;
 
     @Override
     public UserDto loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        System.out.println("username: " + username);
+        logger.info("username: " + username);
         UtilisateurDTO utilisateurTrouve = this.utilisateurService.getUserByUsername(username);
-        System.out.println("utilisateurTrouve: " + utilisateurTrouve);
+        logger.info("utilisateurTrouve: " + utilisateurTrouve);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ADMIN"));
 

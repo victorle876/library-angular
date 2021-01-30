@@ -13,6 +13,8 @@ import com.victor.library2.service.JwtTokenService;
 import com.victor.library2.service.UtilisateurService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,6 +45,8 @@ public class AuthController {
 
  //   private PasswordEncoder passwordEncoder;
 
+    private static final Logger logger = LogManager.getLogger(AuthController.class);
+
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -54,36 +58,34 @@ public class AuthController {
     public ResponseEntity authenticate(@RequestBody UtilisateurDTO utilisateurDTO) {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        System.out.println("utilisateurDTO:" + utilisateurDTO);
-        System.out.println("mail:" + utilisateurDTO.getMail());
-        System.out.println("pwd:" + utilisateurDTO.getPassword());
+        logger.info("utilisateurDTO:" + utilisateurDTO);
+        logger.info("mail:" + utilisateurDTO.getMail());
+        logger.info("pwd:" + utilisateurDTO.getPassword());
 /*        UtilisateurDTO utilisateurId = this.utilisateurService.getUtilisateurConnected();
-        System.out.println("user connected:" + utilisateurId );*/
+        logger.info("user connected:" + utilisateurId );*/
         UtilisateurDTO utilisateurExistant = this.utilisateurService.getUserByMail(utilisateurDTO.getMail());
         if (utilisateurExistant != null) {
-            System.out.println("utilisateurExistant:" + utilisateurExistant);
+            logger.info("utilisateurExistant:" + utilisateurExistant);
             authenticationRequest.username = utilisateurExistant.getUsername();
-            System.out.println("authenticationRequest.username:" + authenticationRequest.username);
+            logger.info("authenticationRequest.username:" + authenticationRequest.username);
             authenticationRequest.password = utilisateurDTO.getPassword();
-            System.out.println("authenticationRequest.password:" + authenticationRequest.password);
+            logger.info("authenticationRequest.password:" + authenticationRequest.password);
         }
 
-        //$2a$10$T0sv9bnVdj6jDhTvtQbyYeiQORlJtlR/RA2eli8POjD8zdL25GCyO
-        //$2a$10$T0sv9bnVdj6jDhTvtQbyYeiQORlJtlR/RA2eli8POjD8zdL25GCyO
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationRequest.username, authenticationRequest.password);
-        System.out.println("usernamePasswordAuthenticationToken:" + usernamePasswordAuthenticationToken);
+        logger.info("usernamePasswordAuthenticationToken:" + usernamePasswordAuthenticationToken);
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        System.out.println("authentication:" + authentication);
+        logger.info("authentication:" + authentication);
         if (authentication != null && authentication.isAuthenticated() && utilisateurExistant != null) {
-                System.out.println("ici4");
+                logger.info("ici4");
                 if (passwordEncoder.matches(utilisateurDTO.getPassword(), utilisateurExistant.getPassword()) == true) {
                     JwtTokens tokens = jwtTokenService.createTokens(authentication);
-                    System.out.println("tokens: " + tokens);
+                    logger.info("tokens: " + tokens);
                     return ResponseEntity.ok().body(tokens);
             }
         }
-        System.out.println("ici5");
+        logger.info("ici5");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }
 
